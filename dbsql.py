@@ -30,11 +30,7 @@ class BotDB:
                                      (id_question,))
         return result.fetchall()
 
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-    #drop_test безлпастно ли ипользовать f ???
-    # Как передать в sql name_table???
-    #check_test безлпастно ли ипользовать f ???
-    # !!!!!!!!!!!!!!!!!!!!!!!!
+
 
     def check_test(self, name_table, id_question):
         "Достаем вопрос и таблицы name_table и записываем в БД информацию о прохождении ученика"
