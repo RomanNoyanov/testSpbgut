@@ -38,8 +38,15 @@ class BotDB:
         return result.fetchone()
 
 
+    def max_question_number(self,name_table):
+        "Достаем максимальное число вопросов"
+        result = self.cursor.execute(f"SELECT MAX(id_question) FROM {name_table}")
+        return result.fetchone()
+
+
 # def question3(message):
 #     question2 = message.text
 #     sql.execute(f"""UPDATE users SET answer2 = '{question2}' WHERE user_id = {message.chat.id}""")
 # ...
 #     bot.register_next_step_handler(msg, question4)
+
