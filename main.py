@@ -5,9 +5,11 @@ from dbsql import BotDB
 from ref import db_file
 from handlers import test as bot_test
 from handlers import registration as bot_registration
+from logFile import log
 BotDB = BotDB(db_file)  # адрес  к бд
 @bot.message_handler(commands=['start'])  # (обработчик сообщения) прописываем что отслеживает бот (/start)
 def start(message):  # функция старт (сообщение)
+    log(message)
     if (not BotDB.user_exists(message.from_user.id)):
         # если в методе проверки наличия пользователя нет пользователя, то:
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)  # объявление кнопок шаблона ReplyKeyboardMarkup

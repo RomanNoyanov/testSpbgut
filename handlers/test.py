@@ -89,7 +89,7 @@ def callback_inline(call):
         bot.send_message(call.message.chat.id, text, reply_markup=markup)
         id_question += 1
         if id_question != 1:
-            print_test(call.message.chat.id, "It_questions_table",id_question)
+            print_test(call.message.chat.id, user_list[2], id_question)
     elif id_question == max_question:
         bot.send_message(call.message.chat.id, text, reply_markup=markup)
         if balls % 10 == 1:

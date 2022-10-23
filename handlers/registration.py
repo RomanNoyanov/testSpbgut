@@ -3,11 +3,13 @@ from telebot import types
 from dbsql import BotDB
 from create_bot import bot
 from ref import db_file
+from logFile import log
+
 BotDB = BotDB(db_file)
 #@bot.message_handler(content_types=['text'])  # (обработчик сообщения)
 # ----------------------РЕГИСТРАЦИЯ-------------------------------------------
-
 def get_user_text(message):
+    log(message)
     get_message = message.text.strip().lower()
     if get_message == "регистрация":
         bot.send_message(message.chat.id, "Введите ваше имя:", reply_markup=types.ReplyKeyboardRemove())
@@ -23,15 +25,16 @@ def get_user_text(message):
         bot.send_message(message.chat.id, "Не понял тебя")
 
 def add_name_user(message):
+    log(message)
     global name_user
     name_user = message.text
-    print("имя:  ", name_user)
     bot.send_message(message.chat.id, "Ведите вашу фамилию:")
     bot.register_next_step_handler(message, add_surname_user)
     return name_user
 
 
 def add_surname_user(message):
+    log(message)
     global surname_user
     surname_user = message.text
     bot.send_message(message.chat.id, "Выбирите номер группы:")
@@ -40,6 +43,7 @@ def add_surname_user(message):
 
 
 def add_group_user(message):
+    log(message)
     global group_user
     group_user = message.text
     mes = f"Ваше имя: {name_user} \nВаша фамилия: {surname_user} \nВаша группа: {group_user}"
