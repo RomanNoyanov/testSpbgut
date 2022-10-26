@@ -43,10 +43,40 @@ class BotDB:
         result = self.cursor.execute(f"SELECT MAX(id_question) FROM {name_table}")
         return result.fetchone()
 
+    def check_test_in_db(self,name_table):
+        "Проверка на наличие таблицы в бд"
+        result=self.cursor.execute(f"SELECT name FROM sqlite_sequence WHERE name='{name_table}' ")
+        return bool(len(result.fetchall()))
 
-# def question3(message):
-#     question2 = message.text
-#     sql.execute(f"""UPDATE users SET answer2 = '{question2}' WHERE user_id = {message.chat.id}""")
-# ...
-#     bot.register_next_step_handler(msg, question4)
+    def create_test(self,name_table):
+        "Создаем новую таблицу из excel файла пользователя"
+        self.cursor.execute(f"""CREATE TABLE IF NOT EXISTS '{name_table}' 
+        ('id_question'	INTEGER,
+        'questions'	TEXT NOT NULL,
+        'answerA'	TEXT,
+        'answerB'	TEXT,
+	    'answerC'	TEXT,
+	    'answerD'	TEXT,
+	    'true_answer'	TEXT NOT NULL,
+	    PRIMARY KEY("id_question" AUTOINCREMENT));""")
+        return self.conn.commit()
+
+
+    def insert_new_test(self,name_file_s, length, worksheet):
+        "Заполение нового теста"
+        for i in range(3,length):
+            questions=worksheet[i][0].value
+            answerA=worksheet[i][1].value
+            answerB=worksheet[i][2].value
+            answerC=worksheet[i][3].value
+            answerD=worksheet[i][4].value
+            true_answer=worksheet[i][5].value
+            self.cursor.execute(f"INSERT INTO '{name_file_s[0]}' (`questions`,`answerA`,`answerB`,`answerC`,`answerD`,`true_answer`) VALUES (?,?,?,?,?,?)",(questions,answerA,answerB,answerC,answerD,true_answer))
+        return self.conn.commit()
+
+    def delete_test(self,name_file_s):
+        self.cursor.execute(f"DROP TABLE IF EXISTS {name_file_s};")
+        return self.conn.commit()
+
+
 

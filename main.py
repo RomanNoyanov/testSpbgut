@@ -6,6 +6,7 @@ from ref import db_file
 from handlers import test as bot_test
 from handlers import registration as bot_registration
 from logFile import log
+from  handlers import importExcel as bot_excel
 BotDB = BotDB(db_file)  # адрес  к бд
 @bot.message_handler(commands=['start'])  # (обработчик сообщения) прописываем что отслеживает бот (/start)
 def start(message):  # функция старт (сообщение)
@@ -47,6 +48,8 @@ def sey_to_help(message):
 bot_test.register_handlers_test(bot)  # функция папке handlers запкскающая обработку теста
 
 bot_registration.register_hendlers_reg(bot) # функция папке handlers запкскающая регистрацию
+
+bot_excel.register_hendlers_excel(bot)  # функция папке handlers запкскающая обработку файла excel
 
 
 if __name__=='__main__':

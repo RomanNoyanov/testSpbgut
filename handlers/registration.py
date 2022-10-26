@@ -54,8 +54,8 @@ def add_group_user(message):
             BotDB.add_user(message.from_user.id, name_user, surname_user, group_user)
             print("Успешно!")
             print(f"Новый ученик: {name_user}  {surname_user} из {group_user} ")
-        except:
-            print("Ошибка")
+        except Exception as e:
+            print(e)
     else:
         bot.send_message(message.chat.id, "Вы уже зарегистрированны")
 

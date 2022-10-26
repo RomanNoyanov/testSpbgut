@@ -2,12 +2,14 @@ from telebot import types
 from dbsql import BotDB
 from create_bot import bot
 from ref import db_file
+from logFile import log
 BotDB = BotDB(db_file)
 # ======================ТЕСТ==============================
 #@bot.message_handler(commands=['test'])  # (обработчик сообщения) прописываем что отслеживает бот(/test)
 # Начало работы с тестом, функция получения назваия теста
 # Начало работы с тестом, функция получения назваия теста
 def get_test(message):
+    log(message)
     bot.send_message(message.chat.id, "Введите название теста:")
     bot.register_next_step_handler(message, drop_test)
     # медот позволяющий передать введенное сообщение внутри обработчика в следующую функцию
@@ -21,10 +23,10 @@ def print_test(messange, table, id_question):
     for i in test[0]:
         test_out.append(i)
     test_out_num_q = "Вопрос №" + str(id_question) + "\n" + str(test_out[0])
-    CB_text_1 = str(test_out[1]) + ":" + str(id_question) + ":" + name_table
-    CB_text_2 = str(test_out[2]) + ":" + str(id_question) + ":" + name_table
-    CB_text_3 = str(test_out[3]) + ":" + str(id_question) + ":" + name_table
-    CB_text_4 = str(test_out[4]) + ":" + str(id_question) + ":" + name_table
+    CB_text_1 = "A" + ":" + str(id_question) + ":" + name_table
+    CB_text_2 = "B"+ ":" + str(id_question) + ":" + name_table
+    CB_text_3 = "C" + ":" + str(id_question) + ":" + name_table
+    CB_text_4 = "D"+ ":" + str(id_question) + ":" + name_table
     markup = types.InlineKeyboardMarkup() # объявление кнопок шаблона InlineKeyboardMarkup
     # https://surik00.gitbooks.io/aiogram-lessons/content/chapter5.html
     #https://qna.habr.com/q/837981
