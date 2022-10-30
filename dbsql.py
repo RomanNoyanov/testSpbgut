@@ -16,11 +16,28 @@ class BotDB:
         """Добавляем юзера в базу"""
         self.cursor.execute(
             "INSERT INTO `users` ('telegram_id','name_user','surname_user','group_user') VALUES (?,?,?,?)",
-            (telegram_id, name_user, surname_user, group_user))
+            (telegram_id, name_user.title(), surname_user.title(), group_user))
         return self.conn.commit()
 
+    def teacher_exists(self, telegram_id):
+        """Проверяем, есть ли преподаватель в базе"""
+        result = self.cursor.execute("SELECT `telegram_id` FROM `teacher` WHERE `telegram_id` = ?", (telegram_id,))
+        return bool(len(result.fetchall()))
+
+    def add_teacher(self, telegram_id,surname_teacher, name_teacher, patronymic_teacher):
+        """Добавляем преподавателя в базу"""
+        self.cursor.execute(
+            "INSERT INTO `teacher` ('telegram_id','surname_teacher','name_teacher','patronymic_teacher') VALUES (?,?,?,?)",
+            (telegram_id,surname_teacher.title(), name_teacher.title(), patronymic_teacher.title()))
+        return self.conn.commit()
+
+    def get_teacher(self, telegram_id):
+        """Достаем информацию о преподавателе"""
+        result = self.cursor.execute("SELECT * FROM `teacher` WHERE `telegram_id` = ?", (telegram_id,))
+        return result.fetchall()
+
     def get_user(self, telegram_id):
-        """Достаем информацию о пользователи"""
+        """Достаем информацию о пользователе"""
         result = self.cursor.execute("SELECT * FROM `users` WHERE `telegram_id` = ?", (telegram_id,))
         return result.fetchall()
 
@@ -64,7 +81,7 @@ class BotDB:
 
     def insert_new_test(self,name_file_s, length, worksheet):
         "Заполение нового теста"
-        for i in range(3,length):
+        for i in range(3,length+1):
             questions=worksheet[i][0].value
             answerA=worksheet[i][1].value
             answerB=worksheet[i][2].value
@@ -77,3 +94,4 @@ class BotDB:
     def delete_test(self,name_file_s):
         self.cursor.execute(f"DROP TABLE IF EXISTS {name_file_s};")
         return self.conn.commit()
+
