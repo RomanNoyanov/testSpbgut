@@ -7,6 +7,8 @@ from handlers import test as bot_test
 from handlers import registration as bot_registration
 from logFile import log
 from handlers import importExcel as bot_excel
+from handlers import score as bot_score
+from handlers import dropPatternTest as bot_dropPatternTest
 
 BotDB = BotDB(db_file)  # адрес к бд
 
@@ -56,7 +58,10 @@ def sey_to_help(message):
         "функция, отправляющая подсказки пользователю"
         message_help = "Основные команды:\n" + \
                        "/test - введите для начала работы с тестом\n" + \
-                       "/format_test - введите для просмотра шаблона нового теста"
+                       "/format_test - введите для просмотра шаблона нового теста"+ \
+                       "/score - введите для получения оценок "+\
+                       "/pattern - введите для получения шаблона тестаугу "
+
     elif BotDB.user_exists(message.from_user.id):
         "функция, отправляющая подсказки пользователю"
         message_help = "Основные команды:" + "\n" + "/test - введите для начала работы с тестом"
@@ -66,10 +71,14 @@ def sey_to_help(message):
 # ======================ФУНКЦИИ==============================
 
 bot_test.register_handlers_test(bot)  # функция папке handlers запускающая обработку теста
+bot_score.register_handlers_score(bot)  # функция папке handlers запускающая вывод оценок за тесты
+bot_dropPatternTest.register_handlers_dropPatternTest(bot) # функция папке handlers запускающая вывод шаблона exel файла
 
-bot_registration.register_hendlers_reg(bot)  # функция папке handlers запускающая регистрацию
+bot_registration.register_handlers_reg(bot)  # функция папке handlers запускающая регистрацию
 
-bot_excel.register_hendlers_excel(bot)  # функция папке handlers запускающая обработку файла excel
+bot_excel.register_handlers_excel(bot)  # функция папке handlers запускающая обработку файла excel
+
+# ====================================================
 
 if __name__ == '__main__':
     bot.polling(none_stop=True)  # бот запрашивает сообщения без интервала
