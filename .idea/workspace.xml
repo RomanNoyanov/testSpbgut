@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="14338454-3f1c-403d-9223-c3b977a63e9a" name="Changes" comment="Доработал:&#10;-Создание нового теста&#10;-Команду /help&#10;-ФИО в одном формате (Первая заглавная, остальные маленькие)&#10;-Кнопки при регистрации">
-      <change afterPath="$PROJECT_DIR$/handlers/dropPatternTest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/handlers/score.py" afterDir="false" />
+    <list default="true" id="14338454-3f1c-403d-9223-c3b977a63e9a" name="Changes" comment="Добавил:&#10;-Вывод оценок &#10;-Вывод шаблона теста">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dbsql.py" beforeDir="false" afterPath="$PROJECT_DIR$/dbsql.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/importExcel.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/importExcel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/registration.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/registration.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/log.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test_spbgut.db" beforeDir="false" afterPath="$PROJECT_DIR$/test_spbgut.db" afterDir="false" />
@@ -184,7 +177,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667166543556</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Добавил:&#10;-Вывод оценок &#10;-Вывод шаблона теста">
+      <created>1667424990553</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1667424990553</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -228,7 +228,8 @@
     <MESSAGE value="Добавил создание новых тестов" />
     <MESSAGE value="31.10" />
     <MESSAGE value="Доработал:&#10;-Создание нового теста&#10;-Команду /help&#10;-ФИО в одном формате (Первая заглавная, остальные маленькие)&#10;-Кнопки при регистрации" />
-    <option name="LAST_COMMIT_MESSAGE" value="Доработал:&#10;-Создание нового теста&#10;-Команду /help&#10;-ФИО в одном формате (Первая заглавная, остальные маленькие)&#10;-Кнопки при регистрации" />
+    <MESSAGE value="Добавил:&#10;-Вывод оценок &#10;-Вывод шаблона теста" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавил:&#10;-Вывод оценок &#10;-Вывод шаблона теста" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
