@@ -56,8 +56,9 @@ def drop_test(message):
     try:
         print_test(message.chat.id, name_table, id_question)  # вызываем функцию формирования вопросов на экране
     except:  # теста нет в базе
-        bot.send_message(message.chat.id,
-                         "Такого теста не существует" + "\n" + "Уточните название теста в преподавателя")
+        msg = bot.send_message(message.chat.id,
+                        "Такого теста не существует" + "\n" + "Уточните название теста у преподавателя" + "\n" + "И повторите ввод")
+        bot.register_next_step_handler(msg, drop_test) # ожидает сообщение пользователя и вызывает функцию
 
 
 @bot.callback_query_handler(func=lambda call: True)
