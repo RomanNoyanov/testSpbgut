@@ -19,6 +19,7 @@ def get_test(message):
 
 def print_test(messange, table, id_question):
     "Функция формирования вопроса с ответами на экране + проверка баллов"
+    global messagetoedit
     name_table = table
     # try:
     test = BotDB.drop_test(name_table, id_question)
@@ -38,7 +39,7 @@ def print_test(messange, table, id_question):
     markup.add(types.InlineKeyboardButton(test_out[2], callback_data=CB_text_2))
     markup.add(types.InlineKeyboardButton(test_out[3], callback_data=CB_text_3))
     markup.add(types.InlineKeyboardButton(test_out[4], callback_data=CB_text_4))
-    bot.send_message(messange, test_out_num_q, reply_markup=markup)
+    messagetoedit = bot.send_message(messange, test_out_num_q, reply_markup=markup)
     # markup.add(types.InlineKeyboardButton(ТЕКСТ КНОПКИ, callback_data=ТО ЧТО ПОЛУЧИТ КОЛБЕК))
     # callback_data--------->@bot.callback_query_handler
     # except:
@@ -64,6 +65,7 @@ def callback_inline(call):
     "Функция переключения вопроса, формирования результата, подсчёта баллов"
     global id_question
     global balls
+    global messagetoedit
     bot.answer_callback_query(call.id)  # убирает состояние загрузки кнопки после нажатия на неё
     user_list = call.data.split(':')
     ans = "answer" + user_list[0]  # создаём строку чтобы по ней вытащить ячейку из sql таблицы
@@ -92,12 +94,12 @@ def callback_inline(call):
         print("callback_inline ошибка")
 
     if id_question < max_question:  # вывод результата вопроса
-        bot.send_message(call.message.chat.id, text, reply_markup=markup)
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=messagetoedit.message_id, text=text)
         id_question += 1
         if id_question != 1:
             print_test(call.message.chat.id, user_list[2], id_question)
     elif id_question == max_question:  # вывод результата теста
-        bot.send_message(call.message.chat.id, text, reply_markup=markup)
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=messagetoedit.message_id, text=text)
         # формирование результатов теста
         if balls % 10 == 1:
             bal = " балл"
