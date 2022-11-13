@@ -12,14 +12,17 @@ BotDB = BotDB(db_file)
 def get_test(message):
     "Начало работы с тестом, функция получения названия теста"
     log(message)
-    bot.send_message(message.chat.id, "Введите название теста:")
-    bot.register_next_step_handler(message,
-                                   drop_test)  # метод позволяющий передать введенное сообщение внутри обработчика в следующую функцию
+    if (BotDB.teacher_exists(message.from_user.id)) or (BotDB.user_exists(message.from_user.id)):
+        bot.send_message(message.chat.id, "Введите название теста:")
+        bot.register_next_step_handler(message,
+                                    drop_test)  # метод позволяющий передать введенное сообщение внутри обработчика в следующую функцию
+    else:
+        bot.send_message(message.chat.id, "Для прохождения теста пройдите регистрацию: введите /start")
 
 
 def print_test(messange, table, id_question):
     "Функция формирования вопроса с ответами на экране + проверка баллов"
-    global messagetoedit
+    global messagetoedit2
     name_table = table
     # try:
     test = BotDB.drop_test(name_table, id_question)
@@ -39,7 +42,8 @@ def print_test(messange, table, id_question):
     markup.add(types.InlineKeyboardButton(test_out[2], callback_data=CB_text_2))
     markup.add(types.InlineKeyboardButton(test_out[3], callback_data=CB_text_3))
     markup.add(types.InlineKeyboardButton(test_out[4], callback_data=CB_text_4))
-    messagetoedit = bot.send_message(messange, test_out_num_q, reply_markup=markup)
+    messagetoedit2 = bot.send_message(messange, test_out_num_q, reply_markup=markup)
+    return messagetoedit2
     # markup.add(types.InlineKeyboardButton(ТЕКСТ КНОПКИ, callback_data=ТО ЧТО ПОЛУЧИТ КОЛБЕК))
     # callback_data--------->@bot.callback_query_handler
     # except:
@@ -57,16 +61,15 @@ def drop_test(message):
         print_test(message.chat.id, name_table, id_question)  # вызываем функцию формирования вопросов на экране
     except:  # теста нет в базе
         msg = bot.send_message(message.chat.id,
-                        "Такого теста не существует" + "\n" + "Уточните название теста у преподавателя" + "\n" + "И повторите ввод")
+                        "Такого теста не существует" + "\n" + "Уточните название теста у преподавателя" + "\n" + "и повторите ввод")
         bot.register_next_step_handler(msg, drop_test) # ожидает сообщение пользователя и вызывает функцию
 
 
-@bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
     "Функция переключения вопроса, формирования результата, подсчёта баллов"
     global id_question
     global balls
-    global messagetoedit
+    global messagetoedit2
     bot.answer_callback_query(call.id)  # убирает состояние загрузки кнопки после нажатия на неё
     user_list = call.data.split(':')
     ans = "answer" + user_list[0]  # создаём строку чтобы по ней вытащить ячейку из sql таблицы
@@ -95,12 +98,12 @@ def callback_inline(call):
         print("callback_inline ошибка")
 
     if id_question < max_question:  # вывод результата вопроса
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=messagetoedit.message_id, text=text)
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=messagetoedit2.message_id, text=text)
         id_question += 1
         if id_question != 1:
             print_test(call.message.chat.id, user_list[2], id_question)
     elif id_question == max_question:  # вывод результата теста
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=messagetoedit.message_id, text=text)
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=messagetoedit2.message_id, text=text)
         # формирование результатов теста
         if balls % 10 == 1:
             bal = " балл"
@@ -109,17 +112,11 @@ def callback_inline(call):
         else:
             bal = " баллов"
         text = "Результат теста: " + "\n" + str(balls) + bal + " из " + str(max_question)
-        print(name_table)
-        print(call.message.chat.id)
-        print(balls)
         BotDB.insert_score_test(name_table, call.message.chat.id, balls)
         bot.send_message(call.message.chat.id, text,
                          reply_markup=markup)  # отправка сообщения с результатом пользователю
         id_question += 1
-    else:  # тест пройден
-        pass
 
 
 def register_handlers_test(bot):
     bot.message_handler(commands=['test'])(get_test)
-    bot.callback_query_handler(func=lambda call: True)(callback_inline)
