@@ -1,4 +1,3 @@
-import telebot  # https://pypi.org/project/pyTelegramBotAPI/0.3.0/
 from telebot import types
 from create_bot import bot
 from dbsql import BotDB
@@ -9,6 +8,8 @@ from logFile import log
 from handlers import importExcel as bot_excel
 from handlers import score as bot_score
 from handlers import dropPatternTest as bot_dropPatternTest
+from handlers import delete_test as bot_delete_test
+from handlers import change_test as bot_change_test
 
 BotDB = BotDB(db_file)  # адрес к бд
 
@@ -54,32 +55,39 @@ def send_message_sticker(message):
 
 @bot.message_handler(commands=['help'])  # (обработчик сообщения) прописываем что отслеживает бот(/help)
 def sey_to_help(message):
+    "функция, отправляющая подсказки пользователю"
     if BotDB.teacher_exists(message.from_user.id):
-        "функция, отправляющая подсказки пользователю"
         message_help = "Основные команды:\n" + \
-                       "/test - введите для начала работы с тестом\n" + \
-                       "/format_test - введите для просмотра шаблона нового теста\n"+ \
-                       "/score - введите для получения оценок\n"+\
-                       "/pattern - введите для получения шаблона тестаугу\n"
-
+                       "/test - введите для начала прохождения теста\n" + \
+                       "/document - введите для создания нового теста\n" + \
+                       "/score - введите для получения баллов лиц, прошедших тест\n" + \
+                       "/pattern - введите для получения шаблона теста\n" + \
+                       "/delete - введите для удаления существующего теста\n" + \
+                       "/change - введите для перезаписи существующего теста\n"
     elif BotDB.user_exists(message.from_user.id):
-        "функция, отправляющая подсказки пользователю"
-        message_help = "Основные команды:" + "\n" + "/test - введите для начала работы с тестом"
+        message_help = "Основные команды:" + "\n" + "/test - введите для начала прохождения теста"
 
-    else: message_help = "Для работы с ботом необходимо зарегистрироваться:" + "\n" + "/start"
+    else:
+        message_help = "Для работы с ботом необходимо зарегистрироваться:" + "\n" + "/start"
+
     bot.send_message(message.chat.id, message_help)
 
 
 # ======================ФУНКЦИИ==============================
 
-bot_test.register_handlers_test(bot)  # функция папке handlers запускающая обработку теста
-bot_score.register_handlers_score(bot)  # функция папке handlers запускающая вывод оценок за тесты
-bot_dropPatternTest.register_handlers_dropPatternTest(bot) # функция папке handlers запускающая вывод шаблона exel файла
+bot_test.register_handlers_test(bot)  # функция папки handlers, запускающая обработку теста
 
-bot_registration.register_handlers_reg(bot)  # функция папке handlers запускающая регистрацию
+bot_score.register_handlers_score(bot)  # функция папки handlers, запускающая вывод оценок за тесты
 
-bot_excel.register_handlers_excel(bot)  # функция папке handlers запускающая обработку файла excel
+bot_dropPatternTest.register_handlers_dropPatternTest(bot) # функция папки handlers, запускающая вывод шаблона exel файла
 
+bot_registration.register_handlers_reg(bot)  # функция папки handlers, запускающая регистрацию
+
+bot_excel.register_handlers_excel(bot)  # функция папки handlers, запускающая обработку файла excel
+
+bot_delete_test.register_handlers_delete_test(bot)  # функция папки handlers, запускающая удаление теста
+
+bot_change_test.register_handlers_change_test(bot)  # функция папки handlers, запускающая изменение теста
 # ====================================================
 
 if __name__ == '__main__':
