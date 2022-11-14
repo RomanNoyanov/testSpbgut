@@ -12,6 +12,15 @@ BotDB = BotDB(db_file)
 # @bot.message_handler(content_types=['text'])  # (обработчик сообщения)
 # ----------------------РЕГИСТРАЦИЯ-------------------------------------------
 
+# Словарь для передачи данных через функции
+reg_dict_name_user_for_users = {}
+reg_dict_surname_user_for_users = {}
+reg_dict_group_user_for_users = {}
+
+reg_dict_name_teacher_for_teacher = {}
+reg_dict_surname_teacher_for_teacher = {}
+reg_dict_teacher_patronymic_for_teacher = {}
+
 
 def get_user_text(message):
     "переработка текста отправленного кнопкой и запуск нужного процесса регистрации"
@@ -49,9 +58,9 @@ def check_name(message):
     log(message)
     name = str(message.text)
     if chek_text(name):
-        if BotDB.user_exists(message.from_user.id): #для изменения зарегистрированных данных данных
+        if BotDB.user_exists(message.from_user.id):  # для изменения зарегистрированных данных данных
             BotDB.update_user_name(message)
-        else: # для внесения данных регистрации
+        else:  # для внесения данных регистрации
             add_name_user(message)
     else:
         bot.send_message(message.chat.id,
@@ -59,18 +68,20 @@ def check_name(message):
         bot.register_next_step_handler(message,
                                        check_name)
 
+
 # https://habr.com/ru/post/349860/
 
 
 def add_name_user(message):
     "функция утверждения имени, просит ввести фамилию и отправляет его на проверку"
     log(message)
-    global name_user
+    # global name_user
+
     name_user = message.text
+    reg_dict_name_user_for_users[message.from_user.id] =name_user
     bot.send_message(message.chat.id,
                      "Введите вашу фамилию:")
     bot.register_next_step_handler(message, check_surname)
-    return name_user
 
 
 def check_surname(message):
@@ -92,13 +103,13 @@ def check_surname(message):
 def add_surname_user(message):
     "функция утверждает фамилию, просит ввести номер группы"
     log(message)
-    global surname_user
+    # global surname_user
     surname_user = message.text
+    reg_dict_surname_user_for_users[message.from_user.id]= surname_user
     bot.send_message(message.chat.id,
                      "Введите номер группы:")
     bot.register_next_step_handler(message,
                                    add_group_user)
-    return surname_user
 
 
 def weather_key(dictionary):
@@ -113,19 +124,24 @@ def weather_key(dictionary):
 def add_group_user(message):
     "функция утверждает группу, завершает процесс регистрации"
     log(message)
-    global group_user
+
     global messagetoedit
     D = {"Завершить процесс регистрации": "завершить",
-         "Изменить данные":"изменить"}
+         "Изменить данные": "изменить"}
     messagetoedit = bot.send_message(message.chat.id,
                                      "Проверьте данные на корректность\n❗После завершения процесса регистрации данные изменить невозможно",
-                                     reply_markup = weather_key(D))
+                                     reply_markup=weather_key(D))
     group_user = message.text
+    reg_dict_group_user_for_users[message.from_user.id]= group_user
+    # reg_list[name_user,surname_user,group_user]
 
     if not BotDB.user_exists(message.from_user.id):
         try:
-            BotDB.add_user(message.from_user.id, name_user,
-                                    surname_user, group_user)
+            name_user = str(reg_dict_name_user_for_users.get(message.from_user.id))
+            surname_user = str(reg_dict_surname_user_for_users.get(message.from_user.id))
+            group_user = str(reg_dict_group_user_for_users.get(message.from_user.id))
+
+            BotDB.add_user(message.from_user.id, name_user,surname_user, group_user)
         except Exception as e:
             print(e)
     else:
@@ -169,13 +185,12 @@ def check_teacher_surname(message):
 def add_teacher_surname(message):
     "функция утверждает фамилию, просит ввести имя и отправляет его на проверку"
     log(message)
-    global teacher_surname
     teacher_surname = message.text
+    reg_dict_surname_teacher_for_teacher[message.from_user.id]=teacher_surname
     bot.send_message(message.chat.id,
                      "Введите ваше имя:")
     bot.register_next_step_handler(message,
                                    check_teacher_name)
-    return teacher_surname
 
 
 def check_teacher_name(message):
@@ -197,13 +212,12 @@ def check_teacher_name(message):
 def add_teacher_name(message):
     "функция утверждает имя, просит ввести отчество и отправляет его на проверку"
     log(message)
-    global teacher_name
     teacher_name = message.text
+    reg_dict_name_teacher_for_teacher[message.from_user.id] = teacher_name
     bot.send_message(message.chat.id,
                      "Введите ваше отчество:")
     bot.register_next_step_handler(message,
                                    check_teacher_patronymic)
-    return teacher_name
 
 
 def check_teacher_patronymic(message):
@@ -225,20 +239,24 @@ def check_teacher_patronymic(message):
 def add_teacher_patronymic(message):
     "функция утверждает отчество, завершает процесс регистрации"
     log(message)
-    global teacher_patronymic
     global messagetoedit
     D = {"Завершить процесс регистрации": "п_завершить", "Изменить данные": "п_изменить"}
     messagetoedit = bot.send_message(message.chat.id,
                                      "Проверьте данные на корректность\n❗После завершения процесса регистрации данные изменить невозможно",
                                      reply_markup=weather_key(D))
     teacher_patronymic = message.text
-
+    reg_dict_teacher_patronymic_for_teacher[message.from_user.id]=teacher_patronymic
+    # reg_list_for_teacher[teacher_surname,teacher_name,teacher_patronymic]
     if (not BotDB.teacher_exists(message.from_user.id)):
         try:
+            teacher_surname = str(reg_dict_surname_teacher_for_teacher.get(message.from_user.id))
+            teacher_name = str(reg_dict_name_teacher_for_teacher.get(message.from_user.id))
+            teacher_patronymic = str(reg_dict_teacher_patronymic_for_teacher.get(message.from_user.id))
             BotDB.add_teacher(message.from_user.id, teacher_surname,
                               teacher_name, teacher_patronymic)
             print("Успешно!")
-            print(f"Новый преподаватель: {teacher_name}  {teacher_surname}  {teacher_patronymic} ")
+            print(
+                f"Новый преподаватель: {teacher_name}  {teacher_surname}  {teacher_patronymic} ")
         except Exception as e:
             print(e)
     else:
@@ -250,20 +268,20 @@ def add_teacher_patronymic(message):
 def completion_registration(call):
     "функция обработки кнопок при регистрации"
     global messagetoedit
-    global name_user
-    global surname_user
-    global group_user
-    global teacher_surname
-    global teacher_name
-    global teacher_patronomic
+
     print(call)
     data = call.data
     bot.answer_callback_query(call.id)
     if call.data == "завершить":
+        name_user = str(reg_dict_name_user_for_users.get(call.message.chat.id))
+        surname_user = str(reg_dict_surname_user_for_users.get(call.message.chat.id))
+        group_user = str(reg_dict_group_user_for_users.get(call.message.chat.id))
+
         mes = f"Вы успешно зарегистрированны! \nВаше имя: {name_user.title()} \nВаша фамилия: {surname_user.title()} \nВаша группа: {group_user.title()}"
         bot.edit_message_text(chat_id=call.message.chat.id,
                               message_id=messagetoedit.message_id, text=mes)
         bot.send_message(call.message.chat.id, "Для ознакомления с основными функциями бота введите\n/help")
+
 
     elif call.data == "изменить":
         D = {"Имя": "имя", "Фамилию": "фамилия",
@@ -275,17 +293,17 @@ def completion_registration(call):
         msg = bot.send_message(call.message.chat.id,
                                "Введите новое имя")
         bot.register_next_step_handler(msg,
-                                       check_name)# функция внесения изменений в бд
+                                       check_name)  # функция внесения изменений в бд
     elif data == "фамилия":
         msg = bot.send_message(call.message.chat.id,
                                "Введите новую фамилию")
         bot.register_next_step_handler(msg,
-                                       check_surname) # функция внесения изменений в бд
+                                       check_surname)  # функция внесения изменений в бд
     elif data == "группа":
         msg = bot.send_message(call.message.chat.id,
                                "Введите новую группу")
         bot.register_next_step_handler(msg,
-                                       BotDB.update_user_group) # функция внесения изменений в бд
+                                       BotDB.update_user_group)  # функция внесения изменений в бд
     elif data == "стоп":
         messagetoedit = bot.edit_message_text(chat_id=call.message.chat.id,
                                               message_id=messagetoedit.message_id,
@@ -294,6 +312,9 @@ def completion_registration(call):
                          "Для ознакомления с основными функциями бота введите\n/help")
 
     elif call.data == "п_завершить":
+        teacher_surname = str(reg_dict_surname_teacher_for_teacher.get(call.message.chat.id))
+        teacher_name = str(reg_dict_name_teacher_for_teacher.get(call.message.chat.id))
+        teacher_patronymic = str(reg_dict_teacher_patronymic_for_teacher.get(call.message.chat.id))
         mes = f"Вы успешно зарегистрированны! \nВаша фамилия: {teacher_surname.title()} \nВаше имя: {teacher_name.title()} \nВаше отчество: {teacher_patronymic.title()}"
         bot.edit_message_text(chat_id=call.message.chat.id,
                               message_id=messagetoedit.message_id,
@@ -301,7 +322,7 @@ def completion_registration(call):
         bot.send_message(call.message.chat.id, "Для ознакомления с основными функциями бота введите\n/help")
 
     elif call.data == "п_изменить":
-        D = {"Фамилию": "п_фамилия","Имя": "п_имя", "Отчество": "п_отчество", "Завершить изменения": "стоп"}
+        D = {"Фамилию": "п_фамилия", "Имя": "п_имя", "Отчество": "п_отчество", "Завершить изменения": "стоп"}
         messagetoedit = bot.edit_message_text(chat_id=call.message.chat.id, message_id=messagetoedit.message_id,
                                               text="Что бы вы хотели изменить?", reply_markup=weather_key(D),
                                               parse_mode='Markdown')
@@ -326,4 +347,4 @@ def completion_registration(call):
 
 def register_handlers_reg(bot):
     bot.message_handler(content_types=['text'])(get_user_text)
-    #@bot.callback_query_handler(func=lambda call: True)(completion_registration)
+    # @bot.callback_query_handler(func=lambda call: True)(completion_registration)
