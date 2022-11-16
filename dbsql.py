@@ -45,7 +45,7 @@ class BotDB:
         return result.fetchall()
 
     def drop_test(self, name_table, id_question):
-        "Достаем вопрос и таблицы name_table и записываем в БД информацию о прохождении ученика"
+        """Достаем вопрос и таблицы name_table и записываем в БД информацию о прохождении ученика"""
         result = self.cursor.execute(
             f"""SELECT `questions`,`answerA`,`answerB`,`answerC`,`answerD`,`true_answer`
              FROM {name_table} 
@@ -53,45 +53,43 @@ class BotDB:
         return result.fetchall()
 
     def max_question_number(self, name_table):
-        "Достаем максимальное число вопросов"
+        """Достаем максимальное число вопросов"""
         result = self.cursor.execute(f"SELECT MAX(id_question) FROM {name_table}")
         return result.fetchone()
 
     def user_answer(self, answer, id_question, name_table):
-        "Достаем ответ пользователя в виде строки"
+        """Достаем ответ пользователя в виде строки"""
         result = self.cursor.execute(f"SELECT {answer} FROM {name_table} WHERE `id_question`=?", (id_question,))
         return result.fetchone()
 
     def check_test_in_db(self, name_table):
-        "Проверка на наличие таблицы в бд"
+        """Проверка на наличие таблицы в бд"""
         result = self.cursor.execute(f"SELECT name FROM sqlite_sequence WHERE name='{name_table}' ")
         return bool(len(result.fetchall()))
 
     def create_test(self, name_table, telegram_id):
+        """Функция создаёт новую таблицу из excel файла пользователя"""
         score_name_table = name_table + "_score"
-        "Создаем новую таблицу из excel файла пользователя"
         self.cursor.execute(f"""CREATE TABLE IF NOT EXISTS '{name_table}' 
-                                ('id_question'	INTEGER,
-                                'questions'	TEXT NOT NULL,
-                                'answerA'	TEXT,
-                                'answerB'	TEXT,
-	                            'answerC'	TEXT,
-                                'answerD'	TEXT,
-	                            'true_answer'	TEXT NOT NULL,
-	                             PRIMARY KEY("id_question" AUTOINCREMENT));""")
+                                ('id_question' INTEGER, 'questions' TEXT NOT NULL,
+                                 'answerA' TEXT,
+                                  'answerB' TEXT,
+                                  'answerC' TEXT,
+                                  'answerD' TEXT,
+                                  'true_answer' TEXT NOT NULL,
+                                  PRIMARY KEY("id_question" AUTOINCREMENT));""")
 
-        self.cursor.execute(f"""CREATE TABLE {score_name_table} (
-	                            "score_id"	INTEGER NOT NULL,
-	                             "telegram_id"	INTEGER NOT NULL,
-	                             "score"	INTEGER NOT NULL,
-	                             PRIMARY KEY("score_id" AUTOINCREMENT));""")
+        self.cursor.execute(f"""CREATE TABLE {score_name_table} ("score_id"	INTEGER NOT NULL,
+                                                                 "telegram_id" INTEGER NOT NULL,
+                                                                 "score" INTEGER NOT NULL,
+                                                                  PRIMARY KEY("score_id" AUTOINCREMENT));""")
 
         self.cursor.execute("INSERT INTO 'table_techer'('telegram_id','name_table') VALUES(?,?)",
                             (telegram_id, name_table))
         return self.conn.commit()
 
     def insert_new_test(self, name_file_s, length, worksheet):
-        "Заполние нового теста"
+        """Заполнение нового теста"""
         for i in range(3, length + 1):
             questions = worksheet[i][0].value
             answerA = worksheet[i][1].value
@@ -106,8 +104,8 @@ class BotDB:
         return self.conn.commit()
 
     def insert_score_test(self, name_file, telegram_id, balls, ):
+        """Заполнение таблицы с оценками учеников"""
         score_name_table = name_file + "_score"
-        "Заполнение таблицы с оценками учеников"
         self.cursor.execute(
             f"INSERT INTO '{score_name_table}' (`telegram_id`,`score`) VALUES (?,?)", (telegram_id, balls))
         return self.conn.commit()
@@ -117,7 +115,7 @@ class BotDB:
         return self.cursor.fetchall()
 
     def delete_test(self, name_table):
-        "Удаление теста"
+        """Удаление теста"""
         score_name_table = name_table + "_score"
         self.cursor.execute(f"DROP TABLE IF EXISTS {name_table};")
         self.cursor.execute(f"DROP TABLE IF EXISTS {score_name_table};")
@@ -125,7 +123,7 @@ class BotDB:
         return self.conn.commit()
 
     def drop_score_for_user(self, name_table, telegram_id):
-        "Вывод личной оценки ученика"
+        """Вывод личной оценки ученика"""
         score_name_table = name_table + "_score"
         self.cursor.execute(f"""  SELECT score
                                   FROM {score_name_table} 
@@ -133,7 +131,7 @@ class BotDB:
         return self.cursor.fetchone()
 
     def drop_score_for_teacher(self, name_table):
-        "Вывод всех оценок за тест"
+        """Вывод всех оценок за тест"""
         score_name_table = name_table + "_score"
         self.cursor.execute(f"""SELECT users.surname_user, users.name_user,  users.group_user, {score_name_table}.score
                                 FROM users, {score_name_table}
@@ -147,70 +145,61 @@ class BotDB:
         return self.cursor.fetchall()
 
     def update_user_name(self, new_name):
-        "функция изменения имени студента"
+        """Функция изменения имени студента"""
         telegram_id = new_name.from_user.id
-        chat_id = new_name.chat.id
-        new_name = new_name.text
+        new_name = new_name.text.title()
         self.cursor.execute("UPDATE `users` SET `name_user` = ? WHERE `telegram_id` = ?", (new_name, telegram_id,))
-        bot.send_message(chat_id, "Изменения успешно внесены!")
         return self.conn.commit()
 
     def update_user_surname(self, new_surname):
-        "функция изменения фамилии студента"
+        """Функция изменения фамилии студента"""
         telegram_id = new_surname.from_user.id
-        chat_id = new_surname.chat.id
-        new_surname = new_surname.text
+        new_surname = new_surname.text.title()
         self.cursor.execute("""UPDATE `users` 
                                SET `surname_user` = ? 
                                WHERE `telegram_id` = ?""", (new_surname, telegram_id,))
-
-        bot.send_message(chat_id, "Изменения успешно внесены!")
         return self.conn.commit()
 
     def update_user_group(self, new_group):
-        "функция изменения группы студента"
+        """Функция изменения группы студента"""
         telegram_id = new_group.from_user.id
         chat_id = new_group.chat.id
         new_group = new_group.text
         self.cursor.execute("""UPDATE `users` 
                                SET `group_user` = ? 
                                WHERE `telegram_id` = ?""", (new_group, telegram_id,))
-
+        User_data = self.cursor.execute("SELECT * FROM `users` WHERE `telegram_id` = ?", (telegram_id,)).fetchall()
+        mes_user = f"Вaши данные: \n" \
+                   f"Ваше имя: {User_data[0][2]} \n" \
+                   f"Ваша фамилия: {User_data[0][3]} \n" \
+                   f"Ваша группа: {User_data[0][4]}"
+        bot.send_message(chat_id, mes_user)
         bot.send_message(chat_id, "Изменения успешно внесены!")
         return self.conn.commit()
 
     def update_teacher_name(self, name):
-        "функция изменения имени преподавателя"
+        """Функция изменения имени преподавателя"""
         telegram_id = name.from_user.id
-        chat_id = name.chat.id
-        name = name.text
+        name = name.text.title()
         self.cursor.execute("""UPDATE `teacher` 
                                SET `name_teacher` = ?
                                WHERE `telegram_id` = ?""", (name, telegram_id,))
-
-        bot.send_message(chat_id, "Изменения успешно внесены!")
         return self.conn.commit()
 
     def update_teacher_surname(self, surname):
-        "функция изменения фамилии преподавателя"
+        """Функция изменения фамилии преподавателя"""
         telegram_id = surname.from_user.id
-        chat_id = surname.chat.id
-        surname = surname.text
+        surname = surname.text.title()
         self.cursor.execute("""UPDATE `teacher` 
                                SET `surname_teacher` = ? 
                                WHERE `telegram_id` = ?""", (surname, telegram_id,))
-
-        bot.send_message(chat_id, "Изменения успешно внесены!")
         return self.conn.commit()
 
     def update_teacher_patronymic(self, patronymic):
-        "функция изменения отчества преподавателя"
-        chat_id = patronymic.chat.id
+        """Функция изменения отчества преподавателя"""
         telegram_id = patronymic.from_user.id
-        patronymic = patronymic.text
+        patronymic = patronymic.text.title()
         self.cursor.execute("""UPDATE `teacher`
                                SET `patronymic_teacher` = ? 
                                WHERE `telegram_id` = ?""", (patronymic, telegram_id,))
-
-        bot.send_message(chat_id, "Изменения успешно внесены!")
         return self.conn.commit()
