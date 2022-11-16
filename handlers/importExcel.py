@@ -7,13 +7,14 @@ import os
 BotDB = BotDB(db_file)
 
 
-# !!!!!!!!!!!!!!!!!!!!!!!!
-# сделать функцию, которая отправит шаблон таблицы для ее заполнения
-# !!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+
 @bot.message_handler(commands=['document'])
 def start_read(message):
     "функция обработки записи теста и отправки подсказки преподавателю"
-    msg = bot.send_message(message.chat.id,"Отправьте файл с тестом в формате xlsx или xls")
+    msg = bot.send_message(message.chat.id,"Отправьте файл с тестом в формате .xlsx или .xls")
     bot.register_next_step_handler(msg, read_excel)
 
 
@@ -42,7 +43,7 @@ def read_excel(message):
                                  f"Тест с таким названием: '{name_file_s[0]}' уже существует. \nПопробуйте сменить название \nПомните, что название теста будет его ключом доступа")
 
             else:
-                bot.reply_to(message, "Неверный тип данных. \nНеобходим .xlsx или xls")
+                bot.reply_to(message, "Неверный тип данных. \nНеобходим .xlsx или .xls")
 
         except Exception as e:
             BotDB.delete_test(name_file_s[0])

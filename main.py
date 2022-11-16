@@ -23,7 +23,8 @@ def start(message):
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)  # объявление кнопок шаблона ReplyKeyboardMarkup
         btn1 = types.KeyboardButton("Зарегистрироваться как студент")
         btn2 = types.KeyboardButton("Зарегистрироваться как преподаватель")
-        markup.add(btn1).add(btn2)  # добавляем кнопку в шаблон ПРИ НАЖАТИИ НА КНОПКУ В БОТ ОПРАВИТСЯ СООБЩЕНИЕ С ТЕКСТОМ
+        markup.add(btn1).add(
+            btn2)  # добавляем кнопку в шаблон ПРИ НАЖАТИИ НА КНОПКУ В БОТ ОПРАВИТСЯ СООБЩЕНИЕ С ТЕКСТОМ
         mess = f'Привет,<b>{message.from_user.first_name}</b> \n Пройдем регистрацию?'
         bot.send_message(message.chat.id, mess,
                          parse_mode='html',
@@ -79,7 +80,8 @@ bot_test.register_handlers_test(bot)  # функция папки handlers, за
 
 bot_score.register_handlers_score(bot)  # функция папки handlers, запускающая вывод оценок за тесты
 
-bot_dropPatternTest.register_handlers_dropPatternTest(bot) # функция папки handlers, запускающая вывод шаблона exel файла
+bot_dropPatternTest.register_handlers_dropPatternTest(
+    bot)  # функция папки handlers, запускающая вывод шаблона exel файла
 
 bot_registration.register_handlers_reg(bot)  # функция папки handlers, запускающая регистрацию
 
@@ -90,5 +92,5 @@ bot_delete_test.register_handlers_delete_test(bot)  # функция папки 
 bot_change_test.register_handlers_change_test(bot)  # функция папки handlers, запускающая изменение теста
 # ====================================================
 
-if __name__ == '__main__':
+if __name__ == '__main__': # Точка входа
     bot.polling(none_stop=True)  # бот запрашивает сообщения без интервала

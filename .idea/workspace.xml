@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="14338454-3f1c-403d-9223-c3b977a63e9a" name="Changes" comment="Добавил:&#10;-Вывод оценок &#10;-Вывод шаблона теста&#10;--------------------&#10;ФИКС:&#10;-Преблема с /hepl без регистрации">
+    <list default="true" id="14338454-3f1c-403d-9223-c3b977a63e9a" name="Changes" comment="Удаление global из регистрации">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dbsql.py" beforeDir="false" afterPath="$PROJECT_DIR$/dbsql.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/delete_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/delete_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/importExcel.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/importExcel.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handlers/registration.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/registration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/score.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/score.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/logFile.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test_spbgut.db" beforeDir="false" afterPath="$PROJECT_DIR$/test_spbgut.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -36,10 +43,10 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/../bot_test/ref.py" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/PycharmProjects/History_Bot/main.py" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/dbsql.py" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/dbsql.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../bot_test/ref.py" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="2ElIt7uOYqnhp9mUWlNYIwWH2Hk" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -204,7 +211,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667426408087</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Удаление global из регистрации">
+      <created>1668461861654</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1668461861654</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -290,7 +304,8 @@
     <MESSAGE value="Доработал:&#10;-Создание нового теста&#10;-Команду /help&#10;-ФИО в одном формате (Первая заглавная, остальные маленькие)&#10;-Кнопки при регистрации" />
     <MESSAGE value="Добавил:&#10;-Вывод оценок &#10;-Вывод шаблона теста" />
     <MESSAGE value="Добавил:&#10;-Вывод оценок &#10;-Вывод шаблона теста&#10;--------------------&#10;ФИКС:&#10;-Преблема с /hepl без регистрации" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавил:&#10;-Вывод оценок &#10;-Вывод шаблона теста&#10;--------------------&#10;ФИКС:&#10;-Преблема с /hepl без регистрации" />
+    <MESSAGE value="Удаление global из регистрации" />
+    <option name="LAST_COMMIT_MESSAGE" value="Удаление global из регистрации" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
