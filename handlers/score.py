@@ -22,7 +22,7 @@ def drop_score(message):
 
 def print_score_for_user(message):
     "Функция для вывода персональной оценки за тест"
-    name_table = message.dict_text
+    name_table = message.text
     name_table_score = name_table + "_score"
     if (BotDB.check_test_in_db(name_table_score)):
         score = BotDB.drop_score_for_user(name_table, message.chat.id, )
@@ -33,9 +33,9 @@ def print_score_for_user(message):
 
 def print_score_for_teacher(message):
     "Функция для вывода всех оценок учеников за тест"
-    max_balls = BotDB.max_question_number(message.dict_text)
-    score = "Название теста: " + message.dict_text + "\n" + "Максимальное количество баллов за тест: " + str(max_balls[0]) + "\n"
-    name_table = message.dict_text
+    max_balls = BotDB.max_question_number(message.text)
+    score = "Название теста: " + message.text + "\n" + "Максимальное количество баллов за тест: " + str(max_balls[0]) + "\n"
+    name_table = message.text
     name_table_score = name_table + "_score"
     if (BotDB.check_test_in_db(name_table_score)):
         scor = BotDB.drop_score_for_teacher(name_table)

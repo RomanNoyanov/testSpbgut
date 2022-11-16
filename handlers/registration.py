@@ -26,7 +26,7 @@ reg_dict_message_to_edit = {}
 def get_user_text(message):
     "переработка текста отправленного кнопкой и запуск нужного процесса регистрации"
     log(message)
-    get_message = message.dict_text.strip().lower()
+    get_message = message.text.strip().lower()
     if get_message == "зарегистрироваться как студент":
         bot.send_message(message.chat.id,
                          "Введите ваше имя:",
@@ -57,7 +57,7 @@ def chek_text(text):
 def check_name(message):
     "функция проверки имени на соответствие шаблону, при несовпадении требует повторный ввод"
     log(message)
-    name = str(message.dict_text)
+    name = str(message.text)
     if chek_text(name):
         if BotDB.user_exists(message.from_user.id):  # для изменения зарегистрированных данных данных
             BotDB.update_user_name(message)
@@ -78,7 +78,7 @@ def add_name_user(message):
     log(message)
     # global name_user
 
-    name_user = message.dict_text
+    name_user = message.text
     dict_name_user_for_users[message.from_user.id] = name_user
     bot.send_message(message.chat.id,
                      "Введите вашу фамилию:")
@@ -88,7 +88,7 @@ def add_name_user(message):
 def check_surname(message):
     "функция проверяет фамилию на соответствие шаблону, просит повторный ввод, если фамилия некорректна"
     log(message)
-    surname = str(message.dict_text)
+    surname = str(message.text)
     if chek_text(surname):
         if BotDB.user_exists(message.from_user.id):
             BotDB.update_user_surname(message)
@@ -105,7 +105,7 @@ def add_surname_user(message):
     "функция утверждает фамилию, просит ввести номер группы"
     log(message)
     # global surname_user
-    surname_user = message.dict_text
+    surname_user = message.text
     dict_surname_user_for_users[message.from_user.id] = surname_user
     bot.send_message(message.chat.id,
                      "Введите номер группы:")
@@ -132,7 +132,7 @@ def add_group_user(message):
                                                                  "❗После завершения процесса регистрации данные изменить невозможно",
                                                                  reply_markup=weather_key(D))
 
-    group_user = message.dict_text
+    group_user = message.text
     dict_group_user_for_users[message.from_user.id] = group_user
     # reg_list[name_user,surname_user,group_user]
 
@@ -154,7 +154,7 @@ def add_group_user(message):
 def get_password(message):
     "функция проверяет код преподавателя, при совпадении начинает процесс регистрации"
     log(message)
-    get_message = message.dict_text.strip().lower()
+    get_message = message.text.strip().lower()
     if get_message == password:
         bot.send_message(message.chat.id, "Введите вашу фамилию:",
                          reply_markup=types.ReplyKeyboardRemove())
@@ -170,7 +170,7 @@ def get_password(message):
 def check_teacher_surname(message):
     "функция проверяет фамилию на соответствие шаблону, просит повторный ввод, если фамилия некорректна"
     log(message)
-    teacher_surname = str(message.dict_text)
+    teacher_surname = str(message.text)
     if chek_text(teacher_surname):
         if BotDB.teacher_exists(message.from_user.id):
             BotDB.update_teacher_surname(message)
@@ -187,7 +187,7 @@ def check_teacher_surname(message):
 def add_teacher_surname(message):
     "функция утверждает фамилию, просит ввести имя и отправляет его на проверку"
     log(message)
-    teacher_surname = message.dict_text
+    teacher_surname = message.text
     dict_surname_teacher_for_teacher[message.from_user.id] = teacher_surname
     bot.send_message(message.chat.id,
                      "Введите ваше имя:")
@@ -198,7 +198,7 @@ def add_teacher_surname(message):
 def check_teacher_name(message):
     "функция проверяет имя на соответствие шаблону, просит повторный ввод, если имя некорректно"
     log(message)
-    teacher_name = str(message.dict_text)
+    teacher_name = str(message.text)
     if chek_text(teacher_name):
         if BotDB.teacher_exists(message.from_user.id):
             BotDB.update_teacher_name(message)
@@ -214,7 +214,7 @@ def check_teacher_name(message):
 def add_teacher_name(message):
     "функция утверждает имя, просит ввести отчество и отправляет его на проверку"
     log(message)
-    teacher_name = message.dict_text
+    teacher_name = message.text
     dict_name_teacher_for_teacher[message.from_user.id] = teacher_name
     bot.send_message(message.chat.id,
                      "Введите ваше отчество:")
@@ -225,7 +225,7 @@ def add_teacher_name(message):
 def check_teacher_patronymic(message):
     "функция проверяет отчество на соответствие шаблону, просит повторный ввод, если отчество некорректно"
     log(message)
-    teacher_patronymic = str(message.dict_text)
+    teacher_patronymic = str(message.text)
     if chek_text(teacher_patronymic):
         if BotDB.teacher_exists(message.from_user.id):
             BotDB.update_teacher_patronymic(message)
@@ -247,7 +247,7 @@ def add_teacher_patronymic(message):
                                                                  "После завершения процесса регистрации данные изменить невозможно",
                                                                  reply_markup=weather_key(D))
 
-    teacher_patronymic = message.dict_text
+    teacher_patronymic = message.text
     dict_teacher_patronymic_for_teacher[message.from_user.id] = teacher_patronymic
     # reg_list_for_teacher[teacher_surname,teacher_name,teacher_patronymic]
     if (not BotDB.teacher_exists(message.from_user.id)):

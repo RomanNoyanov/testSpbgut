@@ -150,7 +150,7 @@ class BotDB:
         "функция изменения имени студента"
         telegram_id = new_name.from_user.id
         chat_id = new_name.chat.id
-        new_name = new_name.dict_text
+        new_name = new_name.text
         self.cursor.execute("UPDATE `users` SET `name_user` = ? WHERE `telegram_id` = ?", (new_name, telegram_id,))
         bot.send_message(chat_id, "Изменения успешно внесены!")
         return self.conn.commit()
@@ -159,7 +159,7 @@ class BotDB:
         "функция изменения фамилии студента"
         telegram_id = new_surname.from_user.id
         chat_id = new_surname.chat.id
-        new_surname = new_surname.dict_text
+        new_surname = new_surname.text
         self.cursor.execute("""UPDATE `users` 
                                SET `surname_user` = ? 
                                WHERE `telegram_id` = ?""", (new_surname, telegram_id,))
@@ -171,7 +171,7 @@ class BotDB:
         "функция изменения группы студента"
         telegram_id = new_group.from_user.id
         chat_id = new_group.chat.id
-        new_group = new_group.dict_text
+        new_group = new_group.text
         self.cursor.execute("""UPDATE `users` 
                                SET `group_user` = ? 
                                WHERE `telegram_id` = ?""", (new_group, telegram_id,))
@@ -183,7 +183,7 @@ class BotDB:
         "функция изменения имени преподавателя"
         telegram_id = name.from_user.id
         chat_id = name.chat.id
-        name = name.dict_text
+        name = name.text
         self.cursor.execute("""UPDATE `teacher` 
                                SET `name_teacher` = ?
                                WHERE `telegram_id` = ?""", (name, telegram_id,))
@@ -195,7 +195,7 @@ class BotDB:
         "функция изменения фамилии преподавателя"
         telegram_id = surname.from_user.id
         chat_id = surname.chat.id
-        surname = surname.dict_text
+        surname = surname.text
         self.cursor.execute("""UPDATE `teacher` 
                                SET `surname_teacher` = ? 
                                WHERE `telegram_id` = ?""", (surname, telegram_id,))
@@ -207,7 +207,7 @@ class BotDB:
         "функция изменения отчества преподавателя"
         chat_id = patronymic.chat.id
         telegram_id = patronymic.from_user.id
-        patronymic = patronymic.dict_text
+        patronymic = patronymic.text
         self.cursor.execute("""UPDATE `teacher`
                                SET `patronymic_teacher` = ? 
                                WHERE `telegram_id` = ?""", (patronymic, telegram_id,))

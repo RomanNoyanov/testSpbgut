@@ -26,7 +26,7 @@ def delete(message):
 def deleted(message):
     "Функция удаления теста"
     try:
-        name_table = message.dict_text
+        name_table = message.text
         print(name_table)
         BotDB.delete_test(name_table)
         bot.send_message(message.chat.id, "Удаление успешно завершено")

@@ -54,7 +54,7 @@ def print_test(message_chat_id, name_table, id_question):
 def drop_test(message):
     "Функция вывода теста на экран, нужна для вывода 1го вопроса"
     dict_balls[message.chat.id] = 0
-    name_table = message.dict_text  # принимаем сообщение, как переменную с названием таблицы
+    name_table = message.text  # принимаем сообщение, как переменную с названием таблицы
     dict_id_question[message.chat.id] = 1  # начальный индекс вопроса
 
     try:
