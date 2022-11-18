@@ -163,18 +163,10 @@ class BotDB:
     def update_user_group(self, new_group):
         """Функция изменения группы студента"""
         telegram_id = new_group.from_user.id
-        chat_id = new_group.chat.id
         new_group = new_group.text
         self.cursor.execute("""UPDATE `users` 
                                SET `group_user` = ? 
                                WHERE `telegram_id` = ?""", (new_group, telegram_id,))
-        User_data = self.cursor.execute("SELECT * FROM `users` WHERE `telegram_id` = ?", (telegram_id,)).fetchall()
-        mes_user = f"Вaши данные: \n" \
-                   f"Ваше имя: {User_data[0][2]} \n" \
-                   f"Ваша фамилия: {User_data[0][3]} \n" \
-                   f"Ваша группа: {User_data[0][4]}"
-        bot.send_message(chat_id, mes_user)
-        bot.send_message(chat_id, "Изменения успешно внесены!")
         return self.conn.commit()
 
     def update_teacher_name(self, name):
