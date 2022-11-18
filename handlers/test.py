@@ -11,15 +11,18 @@ test_dict_message_to_edit = {}
 dict_id_question = {}
 dict_balls = {}
 dict_text = {}
+dict_drop_test_calls = {}  # содержит количество вводов пользователем названия теста
 
 
 # ======================ТЕСТ==============================
-# @bot.message_handler(commands=['test'])  # (обработчик сообщения) прописываем что отслеживает бот(/test)
+
+
 def get_test(message):
-    "Начало работы с тестом, функция получения названия теста"
+    """Начало работы с тестом, функция получения названия теста"""
     log(message)
     if (BotDB.teacher_exists(message.from_user.id)) or (BotDB.user_exists(message.from_user.id)):
         bot.send_message(message.chat.id, "Введите название теста:")
+        dict_drop_test_calls[message.chat.id] = 0
         bot.register_next_step_handler(message,
                                        drop_test)
         # метод позволяющий передать введенное сообщение внутри обработчика в следующую функцию
@@ -28,7 +31,7 @@ def get_test(message):
 
 
 def print_test(message_chat_id, name_table, id_question):
-    "Функция формирования вопроса с ответами на экране + проверка баллов"
+    """Функция формирования вопроса с ответами на экране + проверка баллов"""
     test = BotDB.drop_test(name_table, id_question)
     test_out = []
     for i in test[0]:
@@ -41,7 +44,7 @@ def print_test(message_chat_id, name_table, id_question):
     markup = types.InlineKeyboardMarkup()  # объявление кнопок шаблона InlineKeyboardMarkup
     # https://surik00.gitbooks.io/aiogram-lessons/content/chapter5.html
     # https://qna.habr.com/q/837981
-    # InlineKeyboardMarkup — клавиатура привязанная к сообщению, изпользующая обратный вызов (callback_data)
+    # InlineKeyboardMarkup — клавиатура привязанная к сообщению, использующая обратный вызов (callback_data)
     markup.add(types.InlineKeyboardButton(test_out[1], callback_data=keyboard_button_text_1))
     markup.add(types.InlineKeyboardButton(test_out[2], callback_data=keyboard_button_text_2))
     markup.add(types.InlineKeyboardButton(test_out[3], callback_data=keyboard_button_text_3))
@@ -52,7 +55,7 @@ def print_test(message_chat_id, name_table, id_question):
 
 
 def drop_test(message):
-    "Функция вывода теста на экран, нужна для вывода 1го вопроса"
+    """ Функция вывода теста на экран, нужна для вывода первого вопроса """
     dict_balls[message.chat.id] = 0
     name_table = message.text  # принимаем сообщение, как переменную с названием таблицы
     dict_id_question[message.chat.id] = 1  # начальный индекс вопроса
@@ -60,15 +63,23 @@ def drop_test(message):
     try:
         print_test(message.chat.id, name_table, dict_id_question.get(message.chat.id))
         # вызываем функцию формирования вопросов на экране
+
     except:  # теста нет в базе
-        msg = bot.send_message(message.chat.id,
-                               "Такого теста не существует" + "\n" + "Уточните название теста у преподавателя" + "\n"
-                               + "и повторите ввод")
-        bot.register_next_step_handler(msg, drop_test)  # ожидает сообщение пользователя и вызывает функцию
+        dict_drop_test_calls[message.chat.id] += 1
+        if dict_drop_test_calls[message.chat.id] < 4:  # ограничение на количество вводов названия теста
+            msg = bot.send_message(message.chat.id,
+                                   "Такого теста не существует" + "\n"
+                                   + "Уточните название теста у преподавателя"
+                                   + "и повторите ввод"+ "\n" + "Осталось попыток: "
+                             + str(4 - dict_drop_test_calls[message.chat.id]))
+            bot.register_next_step_handler(msg, drop_test)  # ожидает сообщение пользователя и вызывает функцию
+        else:
+            bot.send_message(message.chat.id, "Для ознакомления с основными функциями бота введите\n/help")
+            dict_drop_test_calls[message.chat.id] = 0
 
 
 def callback_inline(call):
-    "Функция переключения вопроса, формирования результата, подсчёта баллов"
+    """Функция переключения вопроса, формирования результата, подсчёта баллов"""
     bot.answer_callback_query(call.id)  # убирает состояние загрузки кнопки после нажатия на неё
     user_list = call.data.split(':')
     ans = "answer" + user_list[0]  # создаём строку чтобы по ней вытащить ячейку из sql таблицы
@@ -97,6 +108,7 @@ def callback_inline(call):
                                           + (user_answer[2]) + "\n" + str(user_answer[3]) + "\n" + str(user_answer[4])
     except:
         print("callback_inline ошибка")
+
     message_to_edit = test_dict_message_to_edit.get(call.message.chat.id)
     if dict_id_question.get(call.message.chat.id) < max_question:  # вывод результата вопроса
         bot.edit_message_text(chat_id=call.message.chat.id,
