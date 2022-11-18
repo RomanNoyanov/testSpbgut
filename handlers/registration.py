@@ -76,6 +76,13 @@ def check_name(message):
             BotDB.update_user_name(message)
             bot.send_message(message.chat.id, "Изменения успешно внесены!")
             data(message)
+            D = {"Имя": "имя", "Фамилию": "фамилия",
+                 "Группу": "группа", "Завершить изменения": "стоп"}
+            message_to_edit = bot.send_message(message.chat.id,
+                                               text="Что бы вы хотели изменить?",
+                                               reply_markup=weather_key(D),
+                                               parse_mode='Markdown')
+            reg_dict_message_to_edit[message.chat.id] = message_to_edit
         else:  # для внесения данных регистрации
             add_name_user(message)
     else:
@@ -107,6 +114,13 @@ def check_surname(message):
             BotDB.update_user_surname(message)
             bot.send_message(message.chat.id, "Изменения успешно внесены!")
             data(message)
+            D = {"Имя": "имя", "Фамилию": "фамилия",
+                 "Группу": "группа", "Завершить изменения": "стоп"}
+            message_to_edit = bot.send_message(message.chat.id,
+                                               text="Что бы вы хотели изменить?",
+                                               reply_markup=weather_key(D),
+                                               parse_mode='Markdown')
+            reg_dict_message_to_edit[message.chat.id] = message_to_edit
         else:
             add_surname_user(message)
     else:
@@ -125,6 +139,19 @@ def add_surname_user(message):
                      "Введите номер группы:")
     bot.register_next_step_handler(message,
                                    add_group_user)
+
+
+def up_group_user(message):
+    BotDB.update_user_group(message)
+    bot.send_message(message.chat.id, "Изменения успешно внесены!")
+    data(message)
+    D = {"Имя": "имя", "Фамилию": "фамилия",
+         "Группу": "группа", "Завершить изменения": "стоп"}
+    message_to_edit = bot.send_message(message.chat.id,
+                                       text="Что бы вы хотели изменить?",
+                                       reply_markup=weather_key(D),
+                                       parse_mode='Markdown')
+    reg_dict_message_to_edit[message.chat.id] = message_to_edit
 
 
 def weather_key(dictionary):
@@ -218,6 +245,12 @@ def check_teacher_surname(message):
             BotDB.update_teacher_surname(message)
             data_teacher(message)
             bot.send_message(message.chat.id, "Изменения успешно внесены!")
+            D = {"Фамилию": "п_фамилия", "Имя": "п_имя", "Отчество": "п_отчество", "Завершить изменения": "стоп"}
+            message_to_edit = bot.send_message(message.chat.id,
+                                               text="Что бы вы хотели изменить?",
+                                               reply_markup=weather_key(D),
+                                               parse_mode='Markdown')
+            reg_dict_message_to_edit[message.chat.id] = message_to_edit
         else:
             add_teacher_surname(message)
     else:
@@ -247,6 +280,12 @@ def check_teacher_name(message):
             BotDB.update_teacher_name(message)
             data_teacher(message)
             bot.send_message(message.chat.id, "Изменения успешно внесены!")
+            D = {"Фамилию": "п_фамилия", "Имя": "п_имя", "Отчество": "п_отчество", "Завершить изменения": "стоп"}
+            message_to_edit = bot.send_message(message.chat.id,
+                                               text="Что бы вы хотели изменить?",
+                                               reply_markup=weather_key(D),
+                                               parse_mode='Markdown')
+            reg_dict_message_to_edit[message.chat.id] = message_to_edit
         else:
             add_teacher_name(message)
     else:
@@ -276,6 +315,12 @@ def check_teacher_patronymic(message):
             BotDB.update_teacher_patronymic(message)
             data_teacher(message)
             bot.send_message(message.chat.id, "Изменения успешно внесены!")
+            D = {"Фамилию": "п_фамилия", "Имя": "п_имя", "Отчество": "п_отчество", "Завершить изменения": "стоп"}
+            message_to_edit = bot.send_message(message.chat.id,
+                                               text="Что бы вы хотели изменить?",
+                                               reply_markup=weather_key(D),
+                                               parse_mode='Markdown')
+            reg_dict_message_to_edit[message.chat.id] = message_to_edit
         else:
             add_teacher_patronymic(message)
     else:
@@ -321,6 +366,9 @@ def add_teacher_patronymic(message):
                          "Вы уже зарегистрированны")
 
 
+# ------------------------------------------- ОБРАБОТКА КНОПОК -------------------------------------------
+
+
 @bot.callback_query_handler(func=lambda call: True)
 def completion_registration(call):
     """Функция обработки кнопок при регистрации"""
@@ -351,27 +399,33 @@ def completion_registration(call):
                                                                                reply_markup=weather_key(D),
                                                                                parse_mode='Markdown')
     elif data == "имя":
+        message_to_edit = reg_dict_message_to_edit.get(call.message.chat.id)
+        bot.delete_message(call.message.chat.id, message_to_edit.message_id)
         msg = bot.send_message(call.message.chat.id,
                                "Введите новое имя")
         bot.register_next_step_handler(msg,
                                        check_name)  # функция внесения изменений в бд
     elif data == "фамилия":
+        message_to_edit = reg_dict_message_to_edit.get(call.message.chat.id)
+        bot.delete_message(call.message.chat.id, message_to_edit.message_id)
         msg = bot.send_message(call.message.chat.id,
                                "Введите новую фамилию")
         bot.register_next_step_handler(msg,
                                        check_surname)  # функция внесения изменений в бд
     elif data == "группа":
+        message_to_edit = reg_dict_message_to_edit.get(call.message.chat.id)
+        bot.delete_message(call.message.chat.id, message_to_edit.message_id)
         msg = bot.send_message(call.message.chat.id,
                                "Введите новую группу")
         bot.register_next_step_handler(msg,
-                                       BotDB.update_user_group)  # функция внесения изменений в бд
+                                       up_group_user)  # функция внесения изменений в бд
     elif data == "стоп":
-        message_to_edit = reg_dict_message_to_edit.get(call.message.chat.id)
-        reg_dict_message_to_edit[call.message.chat.id] = bot.edit_message_text(chat_id=call.message.chat.id,
-                                                                               message_id=message_to_edit.message_id,
-                                                                               text="Изменения завершены")
-        bot.send_message(call.message.chat.id,
-                         "Для ознакомления с основными функциями бота введите\n/help")
+            message_to_edit = reg_dict_message_to_edit.get(call.message.chat.id)
+            reg_dict_message_to_edit[call.message.chat.id] = bot.edit_message_text(chat_id=call.message.chat.id,
+                                                                                   message_id=message_to_edit.message_id,
+                                                                                   text="Изменения завершены")
+            bot.send_message(call.message.chat.id,
+                             "Для ознакомления с основными функциями бота введите\n/help")
 
     elif call.data == "п_завершить":
         message_to_edit = reg_dict_message_to_edit.get(call.message.chat.id)
@@ -399,16 +453,22 @@ def completion_registration(call):
                                                                                parse_mode='Markdown')
 
     elif data == "п_имя":
+        message_to_edit = reg_dict_message_to_edit.get(call.message.chat.id)
+        bot.delete_message(call.message.chat.id, message_to_edit.message_id)
         msg = bot.send_message(call.message.chat.id,
                                "Введите новое имя")
         bot.register_next_step_handler(msg,
                                        check_teacher_name)  # функция внесения в бд
     elif data == "п_фамилия":
+        message_to_edit = reg_dict_message_to_edit.get(call.message.chat.id)
+        bot.delete_message(call.message.chat.id, message_to_edit.message_id)
         msg = bot.send_message(call.message.chat.id,
                                "Введите новую фамилию")
         bot.register_next_step_handler(msg,
                                        check_teacher_surname)  # функция внесения в бд
     elif data == "п_отчество":
+        message_to_edit = reg_dict_message_to_edit.get(call.message.chat.id)
+        bot.delete_message(call.message.chat.id, message_to_edit.message_id)
         msg = bot.send_message(call.message.chat.id,
                                "Введите новое отчество")
         bot.register_next_step_handler(msg,
