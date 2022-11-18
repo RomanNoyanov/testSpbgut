@@ -20,6 +20,8 @@ dict_name_teacher_for_teacher = {}
 dict_surname_teacher_for_teacher = {}
 dict_teacher_patronymic_for_teacher = {}
 
+dict_get_password_calls = {}
+
 reg_dict_message_to_edit = {}
 
 
@@ -34,6 +36,7 @@ def get_user_text(message):
         bot.register_next_step_handler(message,
                                        check_name)
     elif get_message == "зарегистрироваться как преподаватель":
+        dict_get_password_calls[message.chat.id] = 0
         bot.send_message(message.chat.id,
                          "Введите код доступа:",
                          reply_markup=types.ReplyKeyboardRemove())
@@ -153,7 +156,8 @@ def add_group_user(message):
 
     reg_dict_message_to_edit[message.chat.id] = bot.send_message(message.chat.id,
                                                                  "Проверьте данные на корректность\n" + mes +
-                                                                 "❗После завершения процесса регистрации данные изменить невозможно",
+                                                                 "❗После завершения процесса регистрации " +
+                                                                 "данные изменить невозможно",
                                                                  reply_markup=weather_key(D))
 
     if not BotDB.user_exists(message.from_user.id):
@@ -171,19 +175,28 @@ def add_group_user(message):
 
 
 # -------------------------------------------РЕЖИМ ПРЕПОДАВАТЕЛЯ-------------------------------------------
+
+
 def get_password(message):
     """Функция проверяет код преподавателя, при совпадении начинает процесс регистрации"""
     log(message)
+    dict_get_password_calls[message.chat.id] += 1
     get_message = message.text.strip().lower()
     if get_message == password:
         bot.send_message(message.chat.id, "Введите вашу фамилию:",
                          reply_markup=types.ReplyKeyboardRemove())
         bot.register_next_step_handler(message, check_teacher_surname)
     else:
-        bot.send_message(message.chat.id,
-                            "Неверный код \n Повторите попытку")
-        bot.register_next_step_handler(message,
-                                        get_password)
+        if dict_get_password_calls[message.chat.id] < 4:
+            bot.send_message(message.chat.id,
+                             "Неверный код \nПовторите попытку\nОсталось попыток: "
+                             + str(4 - dict_get_password_calls[message.chat.id]))
+            bot.register_next_step_handler(message,
+                                           get_password)
+        else:
+            bot.send_message(message.chat.id,
+                             "Неверный код \n Начните регистрацию заново, введите /start")
+            dict_get_password_calls[message.chat.id] = 0
 
 
 def data_teacher(message):
@@ -290,7 +303,8 @@ def add_teacher_patronymic(message):
           f"Ваше отчество: {teacher_patronymic.title()} \n"
     reg_dict_message_to_edit[message.chat.id] = bot.send_message(message.chat.id,
                                                                  "Проверьте данные на корректность\n❗" + mes +
-                                                                 "После завершения процесса регистрации данные изменить невозможно",
+                                                                 "После завершения процесса регистрации " +
+                                                                 "данные изменить невозможно",
                                                                  reply_markup=weather_key(D))
 
     if not BotDB.teacher_exists(message.from_user.id):
