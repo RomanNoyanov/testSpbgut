@@ -25,7 +25,7 @@ def start(message):
         btn2 = types.KeyboardButton("Зарегистрироваться как преподаватель")
         markup.add(btn1).add(btn2)
         # добавляем кнопку в шаблон ПРИ НАЖАТИИ НА КНОПКУ В БОТ ОПРАВИТСЯ СООБЩЕНИЕ С ТЕКСТОМ
-        mess = f'Привет,<b>{message.from_user.first_name}</b> \n Пройдем регистрацию?'
+        mess = f'Привет, <b>{message.from_user.first_name}</b> \n Пройдем регистрацию?'
         bot.send_message(message.chat.id, mess,
                          parse_mode='html',
                          reply_markup=markup)  # arse_mode='html - режим отправки сообщения с html тэгами
@@ -92,5 +92,5 @@ bot_delete_test.register_handlers_delete_test(bot)  # функция папки 
 bot_change_test.register_handlers_change_test(bot)  # функция папки handlers, запускающая изменение теста
 # ====================================================
 
-if __name__ == '__main__': # Точка входа
+if __name__ == '__main__':  # Точка входа
     bot.polling(none_stop=True)  # бот запрашивает сообщения без интервала

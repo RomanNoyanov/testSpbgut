@@ -1,5 +1,9 @@
 import re
+import time
+
 from telebot import types
+
+import logFile
 from dbsql import BotDB
 from create_bot import bot
 from ref import db_file
@@ -33,8 +37,7 @@ def get_user_text(message):
         bot.send_message(message.chat.id,
                          "Введите ваше имя:",
                          reply_markup=types.ReplyKeyboardRemove())
-        bot.register_next_step_handler(message,
-                                       check_name)
+        bot.register_next_step_handler(message, check_name)
     elif get_message == "зарегистрироваться как преподаватель":
         dict_get_password_calls[message.chat.id] = 0
         bot.send_message(message.chat.id,
@@ -59,12 +62,17 @@ def check_text(text):
 
 def data(message):
     """Функция вывода зарегистрированные данных пользователя в настоящий момент"""
-    User_data = BotDB.get_user(message.chat.id)
-    mes_user = f"Вaши данные: \n" \
-               f"Ваше имя: {User_data[0][2].title()} \n" \
-               f"Ваша фамилия: {User_data[0][3].title()} \n" \
-               f"Ваша группа: {User_data[0][4].title()}"
-    bot.send_message(message.chat.id, mes_user)
+    try:
+        User_data = BotDB.get_user(message.chat.id)
+        mes_user = f"Вaши данные: \n" \
+                   f"Ваше имя: {User_data[0][2].title()} \n" \
+                   f"Ваша фамилия: {User_data[0][3].title()} \n" \
+                   f"Ваша группа: {User_data[0][4].title()}"
+        bot.send_message(message.chat.id, mes_user)
+    except Exception as e:
+        bot.send_message(message.chat.id, "Что-то пошло не так :(")
+        error_string = "Ошибка registration.py --->data: " + str(e)
+        logFile.log_err(message, error_string)
 
 
 def check_name(message):
@@ -72,19 +80,25 @@ def check_name(message):
     log(message)
     name = str(message.text)
     if check_text(name):
-        if BotDB.user_exists(message.from_user.id):  # для изменения зарегистрированных данных
-            BotDB.update_user_name(message)
-            bot.send_message(message.chat.id, "Изменения успешно внесены!")
-            data(message)
-            D = {"Имя": "имя", "Фамилию": "фамилия",
-                 "Группу": "группа", "Завершить изменения": "стоп"}
-            message_to_edit = bot.send_message(message.chat.id,
-                                               text="Что бы вы хотели изменить?",
-                                               reply_markup=weather_key(D),
-                                               parse_mode='Markdown')
-            reg_dict_message_to_edit[message.chat.id] = message_to_edit
-        else:  # для внесения данных регистрации
-            add_name_user(message)
+        try:
+            if BotDB.user_exists(message.from_user.id):  # для изменения зарегистрированных данных
+                BotDB.update_user_name(message)
+                bot.send_message(message.chat.id, "Изменения успешно внесены!")
+                data(message)
+                D = {"Имя": "имя", "Фамилию": "фамилия",
+                     "Группу": "группа", "Завершить изменения": "стоп"}
+                message_to_edit = bot.send_message(message.chat.id,
+                                                   text="Что бы вы хотели изменить?",
+                                                   reply_markup=weather_key(D),
+                                                   parse_mode='Markdown')
+                reg_dict_message_to_edit[message.chat.id] = message_to_edit
+            else:  # для внесения данных регистрации
+                add_name_user(message)
+        except Exception as e:
+            bot.send_message(message.chat.id, "Что-то пошло не так :(")
+            error_string = "Ошибка registration.py --->check_name: " + str(e)
+            logFile.log_err(message, error_string)
+
     else:
         bot.send_message(message.chat.id,
                          "Неверный формат имени, повторите ввод")
@@ -110,19 +124,26 @@ def check_surname(message):
     log(message)
     surname = str(message.text)
     if check_text(surname):
-        if BotDB.user_exists(message.from_user.id):
-            BotDB.update_user_surname(message)
-            bot.send_message(message.chat.id, "Изменения успешно внесены!")
-            data(message)
-            D = {"Имя": "имя", "Фамилию": "фамилия",
-                 "Группу": "группа", "Завершить изменения": "стоп"}
-            message_to_edit = bot.send_message(message.chat.id,
-                                               text="Что бы вы хотели изменить?",
-                                               reply_markup=weather_key(D),
-                                               parse_mode='Markdown')
-            reg_dict_message_to_edit[message.chat.id] = message_to_edit
-        else:
-            add_surname_user(message)
+        try:
+            if BotDB.user_exists(message.from_user.id):
+                BotDB.update_user_surname(message)
+                bot.send_message(message.chat.id, "Изменения успешно внесены!")
+                data(message)
+                D = {"Имя": "имя", "Фамилию": "фамилия",
+                     "Группу": "группа", "Завершить изменения": "стоп"}
+                message_to_edit = bot.send_message(message.chat.id,
+                                                   text="Что бы вы хотели изменить?",
+                                                   reply_markup=weather_key(D),
+                                                   parse_mode='Markdown')
+                reg_dict_message_to_edit[message.chat.id] = message_to_edit
+            else:
+                add_surname_user(message)
+        except Exception as e:
+            bot.send_message(message.chat.id, "Что-то пошло не так :(")
+            error_string = "Ошибка registration.py --->check_surname: " + str(e)
+            logFile.log_err(message, error_string)
+
+
     else:
         bot.send_message(message.chat.id,
                          "Неверный формат фамилии, повторите ввод")
@@ -142,16 +163,21 @@ def add_surname_user(message):
 
 
 def up_group_user(message):
-    BotDB.update_user_group(message)
-    bot.send_message(message.chat.id, "Изменения успешно внесены!")
-    data(message)
-    D = {"Имя": "имя", "Фамилию": "фамилия",
-         "Группу": "группа", "Завершить изменения": "стоп"}
-    message_to_edit = bot.send_message(message.chat.id,
-                                       text="Что бы вы хотели изменить?",
-                                       reply_markup=weather_key(D),
-                                       parse_mode='Markdown')
-    reg_dict_message_to_edit[message.chat.id] = message_to_edit
+    try:
+        BotDB.update_user_group(message)
+        bot.send_message(message.chat.id, "Изменения успешно внесены!")
+        data(message)
+        D = {"Имя": "имя", "Фамилию": "фамилия",
+             "Группу": "группа", "Завершить изменения": "стоп"}
+        message_to_edit = bot.send_message(message.chat.id,
+                                           text="Что бы вы хотели изменить?",
+                                           reply_markup=weather_key(D),
+                                           parse_mode='Markdown')
+        reg_dict_message_to_edit[message.chat.id] = message_to_edit
+    except Exception as e:
+        bot.send_message(message.chat.id, "Что-то пошло не так :(")
+        error_string = "Ошибка registration.py --->up_group_user: " + str(e)
+        logFile.log_err(message, error_string)
 
 
 def weather_key(dictionary):
@@ -195,7 +221,9 @@ def add_group_user(message):
 
             BotDB.add_user(message.from_user.id, name_user, surname_user, group_user)
         except Exception as e:
-            print(e)
+            bot.send_message(message.chat.id, "Что-то пошло не так :(")
+            error_string = "Ошибка registration.py --->add_group_user: " + str(e)
+            logFile.log_err(message, error_string)
     else:
         bot.send_message(message.chat.id,
                          "Вы уже зарегистрированны")
@@ -228,12 +256,17 @@ def get_password(message):
 
 def data_teacher(message):
     """Функция выводит зарегистрированные данные преподавателя в настоящий момент"""
-    teacher_data = BotDB.get_teacher(message.chat.id)
-    mes_user = f"Вaши данные: \n" \
-               f"Ваша фамилия: {teacher_data[0][2].title()} \n" \
-               f"Ваше имя: {teacher_data[0][3].title()} \n" \
-               f"Ваше отчество: {teacher_data[0][4].title()}"
-    bot.send_message(message.chat.id, mes_user)
+    try:
+        teacher_data = BotDB.get_teacher(message.chat.id)
+        mes_user = f"Вaши данные: \n" \
+                   f"Ваша фамилия: {teacher_data[0][2].title()} \n" \
+                   f"Ваше имя: {teacher_data[0][3].title()} \n" \
+                   f"Ваше отчество: {teacher_data[0][4].title()}"
+        bot.send_message(message.chat.id, mes_user)
+    except Exception as e:
+        bot.send_message(message.chat.id, "Что-то пошло не так :(")
+        error_string = "Ошибка registration.py --->data_teacher: " + str(e)
+        logFile.log_err(message, error_string)
 
 
 def check_teacher_surname(message):
@@ -241,18 +274,24 @@ def check_teacher_surname(message):
     log(message)
     teacher_surname = str(message.text)
     if check_text(teacher_surname):
-        if BotDB.teacher_exists(message.from_user.id):
-            BotDB.update_teacher_surname(message)
-            data_teacher(message)
-            bot.send_message(message.chat.id, "Изменения успешно внесены!")
-            D = {"Фамилию": "п_фамилия", "Имя": "п_имя", "Отчество": "п_отчество", "Завершить изменения": "стоп"}
-            message_to_edit = bot.send_message(message.chat.id,
-                                               text="Что бы вы хотели изменить?",
-                                               reply_markup=weather_key(D),
-                                               parse_mode='Markdown')
-            reg_dict_message_to_edit[message.chat.id] = message_to_edit
-        else:
-            add_teacher_surname(message)
+        try:
+            if BotDB.teacher_exists(message.from_user.id):
+                BotDB.update_teacher_surname(message)
+                data_teacher(message)
+                bot.send_message(message.chat.id, "Изменения успешно внесены!")
+                D = {"Фамилию": "п_фамилия", "Имя": "п_имя", "Отчество": "п_отчество", "Завершить изменения": "стоп"}
+                message_to_edit = bot.send_message(message.chat.id,
+                                                   text="Что бы вы хотели изменить?",
+                                                   reply_markup=weather_key(D),
+                                                   parse_mode='Markdown')
+                reg_dict_message_to_edit[message.chat.id] = message_to_edit
+            else:
+                add_teacher_surname(message)
+        except Exception as e:
+            bot.send_message(message.chat.id, "Что-то пошло не так :(")
+            error_string = "Ошибка registration.py --->check_teacher_surname: " + str(e)
+            logFile.log_err(message, error_string)
+
     else:
         bot.send_message(message.chat.id,
                          "Неверный формат фамилии, повторите ввод")
@@ -276,18 +315,24 @@ def check_teacher_name(message):
     log(message)
     teacher_name = str(message.text)
     if check_text(teacher_name):
-        if BotDB.teacher_exists(message.from_user.id):
-            BotDB.update_teacher_name(message)
-            data_teacher(message)
-            bot.send_message(message.chat.id, "Изменения успешно внесены!")
-            D = {"Фамилию": "п_фамилия", "Имя": "п_имя", "Отчество": "п_отчество", "Завершить изменения": "стоп"}
-            message_to_edit = bot.send_message(message.chat.id,
-                                               text="Что бы вы хотели изменить?",
-                                               reply_markup=weather_key(D),
-                                               parse_mode='Markdown')
-            reg_dict_message_to_edit[message.chat.id] = message_to_edit
-        else:
-            add_teacher_name(message)
+        try:
+            if BotDB.teacher_exists(message.from_user.id):
+                BotDB.update_teacher_name(message)
+                data_teacher(message)
+                bot.send_message(message.chat.id, "Изменения успешно внесены!")
+                D = {"Фамилию": "п_фамилия", "Имя": "п_имя", "Отчество": "п_отчество", "Завершить изменения": "стоп"}
+                message_to_edit = bot.send_message(message.chat.id,
+                                                   text="Что бы вы хотели изменить?",
+                                                   reply_markup=weather_key(D),
+                                                   parse_mode='Markdown')
+                reg_dict_message_to_edit[message.chat.id] = message_to_edit
+            else:
+                add_teacher_name(message)
+        except Exception as e:
+            bot.send_message(message.chat.id, "Что-то пошло не так :(")
+            error_string = "Ошибка registration.py --->check_teacher_name: " + str(e)
+            logFile.log_err(message, error_string)
+
     else:
         bot.send_message(message.chat.id,
                          "Неверный формат имени, повторите ввод")
@@ -311,18 +356,23 @@ def check_teacher_patronymic(message):
     log(message)
     teacher_patronymic = str(message.text)
     if check_text(teacher_patronymic):
-        if BotDB.teacher_exists(message.from_user.id):
-            BotDB.update_teacher_patronymic(message)
-            data_teacher(message)
-            bot.send_message(message.chat.id, "Изменения успешно внесены!")
-            D = {"Фамилию": "п_фамилия", "Имя": "п_имя", "Отчество": "п_отчество", "Завершить изменения": "стоп"}
-            message_to_edit = bot.send_message(message.chat.id,
-                                               text="Что бы вы хотели изменить?",
-                                               reply_markup=weather_key(D),
-                                               parse_mode='Markdown')
-            reg_dict_message_to_edit[message.chat.id] = message_to_edit
-        else:
-            add_teacher_patronymic(message)
+        try:
+            if BotDB.teacher_exists(message.from_user.id):
+                BotDB.update_teacher_patronymic(message)
+                data_teacher(message)
+                bot.send_message(message.chat.id, "Изменения успешно внесены!")
+                D = {"Фамилию": "п_фамилия", "Имя": "п_имя", "Отчество": "п_отчество", "Завершить изменения": "стоп"}
+                message_to_edit = bot.send_message(message.chat.id,
+                                                   text="Что бы вы хотели изменить?",
+                                                   reply_markup=weather_key(D),
+                                                   parse_mode='Markdown')
+                reg_dict_message_to_edit[message.chat.id] = message_to_edit
+            else:
+                add_teacher_patronymic(message)
+        except Exception as e:
+            bot.send_message(message.chat.id, "Что-то пошло не так :(")
+            error_string = "Ошибка registration.py --->check_teacher_patronymic: " + str(e)
+            logFile.log_err(message, error_string)
     else:
         bot.send_message(message.chat.id,
                          "Неверный формат отчества, повторите ввод")
@@ -360,7 +410,9 @@ def add_teacher_patronymic(message):
             BotDB.add_teacher(message.from_user.id, teacher_surname,
                               teacher_name, teacher_patronymic)
         except Exception as e:
-            print(e)
+            bot.send_message(message.chat.id, "Что-то пошло не так :(")
+            error_string = "Ошибка registration.py --->add_teacher_patronymic: " + str(e)
+            logFile.log_err(message, error_string)
     else:
         bot.send_message(message.chat.id,
                          "Вы уже зарегистрированны")
@@ -420,12 +472,12 @@ def completion_registration(call):
         bot.register_next_step_handler(msg,
                                        up_group_user)  # функция внесения изменений в бд
     elif data == "стоп":
-            message_to_edit = reg_dict_message_to_edit.get(call.message.chat.id)
-            reg_dict_message_to_edit[call.message.chat.id] = bot.edit_message_text(chat_id=call.message.chat.id,
-                                                                                   message_id=message_to_edit.message_id,
-                                                                                   text="Изменения завершены")
-            bot.send_message(call.message.chat.id,
-                             "Для ознакомления с основными функциями бота введите\n/help")
+        message_to_edit = reg_dict_message_to_edit.get(call.message.chat.id)
+        reg_dict_message_to_edit[call.message.chat.id] = bot.edit_message_text(chat_id=call.message.chat.id,
+                                                                               message_id=message_to_edit.message_id,
+                                                                               text="Изменения завершены")
+        bot.send_message(call.message.chat.id,
+                         "Для ознакомления с основными функциями бота введите\n/help")
 
     elif call.data == "п_завершить":
         message_to_edit = reg_dict_message_to_edit.get(call.message.chat.id)

@@ -1,3 +1,4 @@
+import logFile
 from create_bot import bot
 from dbsql import BotDB
 from ref import db_file
@@ -18,21 +19,23 @@ def delete(message):
             msg = bot.send_message(message.chat.id,
                                    "Введите название теста, который хотите удалить\nВаши ключи от тестов:\n" + names_table)
             bot.register_next_step_handler(msg, deleted)
-        except:
-            print("delete")
+        except Exception as e:
             bot.send_message(message.chat.id, "Удаление не завершено")
+            error_string = "Ошибка delete_test.py --->delete: " + str(e)
+            logFile.log_err(message=message.chat.id, err=error_string)
 
 
 def deleted(message):
     "Функция удаления теста"
+    name_table = message.text
     try:
-        name_table = message.text
-        print(name_table)
         BotDB.delete_test(name_table)
+
         bot.send_message(message.chat.id, "Удаление успешно завершено")
-    except:
-        print("deleted")
-        bot.send_message(message.chat.id, "Удаление не завершено")
+    except Exception as e:
+        bot.send_message(message.chat.id, "Удаление не завершено!")
+        error_string = "Ошибка delete_test.py --->deleted: " + str(e)
+        logFile.log_err(message=message.chat.id, err=error_string)
 
 
 def register_handlers_delete_test(bot):
