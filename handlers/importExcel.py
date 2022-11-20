@@ -5,12 +5,14 @@ from ref import db_file
 import openpyxl
 import os
 
+"ФАЙЛ ДЛЯ СОХРАНЕНИЯ excel теста  от преподавателю (excel --> DB)"
+
 BotDB = BotDB(db_file)
 
 
 @bot.message_handler(commands=['document'])
 def start_read(message):
-    "функция обработки записи теста и отправки подсказки преподавателю"
+    """функция обработки записи теста и отправки подсказки преподавателю"""
     msg = bot.send_message(message.chat.id, "Отправьте файл с тестом в формате .xlsx или .xls")
     bot.register_next_step_handler(msg, read_excel)
 
@@ -39,7 +41,8 @@ def read_excel(message):
 
                 else:
                     bot.reply_to(message,
-                                 f"Тест с таким названием: '{name_file_s[0]}' уже существует. \nПопробуйте сменить название \nПомните, что название теста будет его ключом доступа")
+                                 f"Тест с таким названием: '{name_file_s[0]}' уже существует. \nПопробуйте сменить "
+                                 f"название \nПомните, что название теста будет его ключом доступа")
 
             else:
                 bot.reply_to(message, "Неверный тип данных. \nНеобходим .xlsx или .xls")

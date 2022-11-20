@@ -11,6 +11,8 @@ from ref import password
 from logFile import log
 from handlers import test
 
+"ФАЙЛ ДЛЯ РЕГИСТРАЦИИ пользователей и преподавателей (telegram --> DB)"
+
 BotDB = BotDB(db_file)
 
 # ----------------------РЕГИСТРАЦИЯ-------------------------------------------

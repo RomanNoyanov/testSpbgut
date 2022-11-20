@@ -1,3 +1,5 @@
+"""ФАЙЛ ДЛЯ ИНИЦИЛИЗАЦИИ И СВЯЗИ С ФАЙЛОВ (handlers <--> main)"""
+
 from handlers import registration
 from handlers import test
 from handlers import importExcel

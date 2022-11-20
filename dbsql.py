@@ -1,8 +1,7 @@
 import sqlite3
-
 import logFile
-from create_bot import bot
 
+"ФАЙЛ ДЛЯ ОБРАБОТКИ SQL запросов (program <--> DB)"
 
 class BotDB:
 
@@ -195,7 +194,8 @@ class BotDB:
         try:
             """Вывод всех оценок за тест"""
             score_name_table = name_table + "_score"
-            self.cursor.execute(f"""SELECT users.surname_user, users.name_user,  users.group_user, {score_name_table}.score
+            self.cursor.execute(f"""SELECT users.surname_user, users.name_user,  
+                                    users.group_user, {score_name_table}.score
                                     FROM users, {score_name_table}
                                     WHERE  users.telegram_id = {score_name_table}.telegram_id""")
             return self.cursor.fetchall()

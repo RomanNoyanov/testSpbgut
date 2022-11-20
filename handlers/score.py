@@ -3,8 +3,9 @@ from dbsql import BotDB
 from create_bot import bot
 from ref import db_file
 
-BotDB = BotDB(db_file)
+"ФАЙЛ ДЛЯ ВЫВОДА баллов пройденных теста  (DB --> telegram)"
 
+BotDB = BotDB(db_file)
 
 def drop_score(message):
     try:

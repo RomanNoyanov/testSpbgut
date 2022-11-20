@@ -1,5 +1,9 @@
-token = '5602201740:AAHVEH531e1qIepmpfdt-0KHfuhKd_oMBAc'
+"""ФАЙЛ ДЛЯ ХРАНЕНИЯ ссылок, ключей и т.п. (program --> program)"""
 
-db_file = 'test_spbgut.db'
+# !!!!!!!! УДАЛИТЬ В КОНЕЧНОМ ПУШЕ ГИТ !!!!!!!!!!!!!!
+# !!!!!!!! НЕ ДОБАВЛЯТЬ В ЛИСТИНГ !!!!!!!!!!!!!!
+token = '5602201740:AAHVEH531e1qIepmpfdt-0KHfuhKd_oMBAc'  # токен к telegram bot
+
+db_file = 'test_spbgut.db'  # ссылка на файл с бд
 
 password = '0123'  # пароль для оператора

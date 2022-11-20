@@ -1,12 +1,11 @@
-import time
-
 from telebot import types
-
 import logFile
 from dbsql import BotDB
 from create_bot import bot
 from ref import db_file
 from logFile import log
+
+"ФАЙЛ ДЛЯ ВЫВОДА тестов (DB --> telegram)"
 
 BotDB = BotDB(db_file)
 

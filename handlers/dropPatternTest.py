@@ -4,11 +4,13 @@ from dbsql import BotDB
 from ref import db_file
 from logFile import log
 
+"ФАЙЛ ДЛЯ ОТПРАВКИ ШАБЛОНА excel теста файла преподавателю (program --> telegram)"
+
 BotDB = BotDB(db_file)
 
 
 def drop_file(message):
-    "Функция для вывода шаблона теста"
+    """Функция для вывода шаблона теста"""
     if BotDB.teacher_exists(message.from_user.id):
         try:
             file = open("files/Pattern_test_Excel.xlsx", "rb")

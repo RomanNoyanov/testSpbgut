@@ -1,7 +1,10 @@
 import datetime
 
+"ФАЙЛ ДЛЯ ЗАПИСИ действий пользователей в txt (telegram --> .txt)"
 
-def log(message):
+
+def log(message):  # def log - запись сообщений от пользователя
+
     dt = datetime.datetime.now()
     try:
         s = (" Сообщение от {0} {1} (id = {2}) СООБЩЕНИЕ: {3}".format(message.from_user.first_name,
@@ -14,7 +17,8 @@ def log(message):
         print(e)
 
 
-def log_err(message="none", err="none"):
+def log_err(message="none", err="none"):  # def log_err - запсиь ощибок при обработки try
+
     dt = datetime.datetime.now()
     try:
         s = (" Сообщение от id = {0} СООБЩЕНИЕ: {1}".format(str(message.from_user.id), message.text))

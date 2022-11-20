@@ -3,6 +3,8 @@ import telebot  # https://pypi.org/project/pyTelegramBotAPI/0.3.0/
 import logFile
 from ref import token
 
+"ФАЙЛ ДЛЯ ПОДЛЮЧЕНИЯ бота (program --> telegram)"
+
 try:
     bot = telebot.TeleBot(token)  # ссылка на токин для соединения с ботом
 except Exception as e:

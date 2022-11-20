@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="14338454-3f1c-403d-9223-c3b977a63e9a" name="Changes" comment="-Удаление global из registration.py&#10;-Удаление global из test.py&#10;Некоторые правки по коду от Льва" />
+    <list default="true" id="14338454-3f1c-403d-9223-c3b977a63e9a" name="Changes" comment="Добавил:&#10;-Обработку исключений &#10;-Логирование ошибок&#10;Исправили:&#10;-Работу delete_test&#10;-Работу  importExcel(НАДО ТЕСТИРОВАТЬ)">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/create_bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/create_bot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dbsql.py" beforeDir="false" afterPath="$PROJECT_DIR$/dbsql.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/dropPatternTest.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/dropPatternTest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/importExcel.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/importExcel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/registration.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/registration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/score.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/score.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/logFile.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref.py" beforeDir="false" afterPath="$PROJECT_DIR$/ref.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_spbgut.db" beforeDir="false" afterPath="$PROJECT_DIR$/test_spbgut.db" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -29,6 +42,7 @@
       </branch-storage>
     </favorite-branches>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$USER_HOME$/PycharmProjects/History_Bot/main.py" root0="FORCE_HIGHLIGHTING" />
@@ -47,7 +61,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
     <property name="run.code.analysis.last.selected.profile" value="aDefault" />
-    <property name="settings.editor.selected.configurable" value="GitLabConfigurableProvider" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -227,7 +241,21 @@
       <option name="project" value="LOCAL" />
       <updated>1668560136307</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="-Удаление global из registration.py&#10;-Удаление global из test.py&#10;Некоторые правки по коду от Льва">
+      <created>1668560492183</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1668560492183</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Добавил:&#10;-Обработку исключений &#10;-Логирование ошибок&#10;Исправили:&#10;-Работу delete_test&#10;-Работу  importExcel(НАДО ТЕСТИРОВАТЬ)">
+      <created>1668881085207</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1668881085207</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -251,7 +279,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="master" />
+                        <option value="origin/Natasha" />
                       </list>
                     </value>
                   </entry>
@@ -315,7 +343,8 @@
     <MESSAGE value="Добавил:&#10;-Вывод оценок &#10;-Вывод шаблона теста&#10;--------------------&#10;ФИКС:&#10;-Преблема с /hepl без регистрации" />
     <MESSAGE value="Удаление global из регистрации" />
     <MESSAGE value="-Удаление global из registration.py&#10;-Удаление global из test.py&#10;Некоторые правки по коду от Льва" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Удаление global из registration.py&#10;-Удаление global из test.py&#10;Некоторые правки по коду от Льва" />
+    <MESSAGE value="Добавил:&#10;-Обработку исключений &#10;-Логирование ошибок&#10;Исправили:&#10;-Работу delete_test&#10;-Работу  importExcel(НАДО ТЕСТИРОВАТЬ)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавил:&#10;-Обработку исключений &#10;-Логирование ошибок&#10;Исправили:&#10;-Работу delete_test&#10;-Работу  importExcel(НАДО ТЕСТИРОВАТЬ)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
