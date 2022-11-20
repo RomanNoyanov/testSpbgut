@@ -3,17 +3,16 @@
   <component name="ChangeListManager">
     <list default="true" id="14338454-3f1c-403d-9223-c3b977a63e9a" name="Changes" comment="Добавил:&#10;-Обработку исключений &#10;-Логирование ошибок&#10;Исправили:&#10;-Работу delete_test&#10;-Работу  importExcel(НАДО ТЕСТИРОВАТЬ)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/create_bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/create_bot.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dbsql.py" beforeDir="false" afterPath="$PROJECT_DIR$/dbsql.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/change_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/change_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/delete_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/delete_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handlers/dropPatternTest.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/dropPatternTest.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handlers/importExcel.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/importExcel.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handlers/registration.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/registration.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handlers/score.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/score.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handlers/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/logFile.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ref.py" beforeDir="false" afterPath="$PROJECT_DIR$/ref.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_spbgut.db" beforeDir="false" afterPath="$PROJECT_DIR$/test_spbgut.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,6 +48,9 @@
     <setting file="file://$PROJECT_DIR$/main.py" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/dbsql.py" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../bot_test/ref.py" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedIndex" value="2" />
   </component>
   <component name="ProjectId" id="2ElIt7uOYqnhp9mUWlNYIwWH2Hk" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -255,7 +257,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668881085207</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Добавил:&#10;-Обработку исключений &#10;-Логирование ошибок&#10;Исправили:&#10;-Работу delete_test&#10;-Работу  importExcel(НАДО ТЕСТИРОВАТЬ)">
+      <created>1668927304510</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1668927304510</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

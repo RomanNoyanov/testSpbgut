@@ -1,8 +1,5 @@
 import re
-import time
-
 from telebot import types
-
 import logFile
 from dbsql import BotDB
 from create_bot import bot
@@ -65,11 +62,11 @@ def check_text(text):
 def data(message):
     """Функция вывода зарегистрированные данных пользователя в настоящий момент"""
     try:
-        User_data = BotDB.get_user(message.chat.id)
+        user_data = BotDB.get_user(message.chat.id)
         mes_user = f"Вaши данные: \n" \
-                   f"Ваше имя: {User_data[0][2].title()} \n" \
-                   f"Ваша фамилия: {User_data[0][3].title()} \n" \
-                   f"Ваша группа: {User_data[0][4].title()}"
+                   f"Ваше имя: {user_data[0][2].title()} \n" \
+                   f"Ваша фамилия: {user_data[0][3].title()} \n" \
+                   f"Ваша группа: {user_data[0][4].title()}"
         bot.send_message(message.chat.id, mes_user)
     except Exception as e:
         bot.send_message(message.chat.id, "Что-то пошло не так :(")
@@ -87,11 +84,11 @@ def check_name(message):
                 BotDB.update_user_name(message)
                 bot.send_message(message.chat.id, "Изменения успешно внесены!")
                 data(message)
-                D = {"Имя": "имя", "Фамилию": "фамилия",
+                d = {"Имя": "имя", "Фамилию": "фамилия",
                      "Группу": "группа", "Завершить изменения": "стоп"}
                 message_to_edit = bot.send_message(message.chat.id,
                                                    text="Что бы вы хотели изменить?",
-                                                   reply_markup=weather_key(D),
+                                                   reply_markup=weather_key(d),
                                                    parse_mode='Markdown')
                 reg_dict_message_to_edit[message.chat.id] = message_to_edit
             else:  # для внесения данных регистрации
@@ -144,7 +141,6 @@ def check_surname(message):
             bot.send_message(message.chat.id, "Что-то пошло не так :(")
             error_string = "Ошибка registration.py --->check_surname: " + str(e)
             logFile.log_err(message, error_string)
-
 
     else:
         bot.send_message(message.chat.id,

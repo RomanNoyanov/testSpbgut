@@ -22,7 +22,7 @@ def log_err(message="none", err="none"):  # def log_err - запсиь ощиб�
     dt = datetime.datetime.now()
     try:
         s = (" Сообщение от id = {0} СООБЩЕНИЕ: {1}".format(str(message.from_user.id), message.text))
-    except:
+    except Exception as e:
         s = " Полученные данные: " + str(message)
 
     try:

@@ -2,7 +2,6 @@ import logFile
 from create_bot import bot
 from dbsql import BotDB
 from ref import db_file
-from logFile import log
 
 "ФАЙЛ ДЛЯ ОТПРАВКИ ШАБЛОНА excel теста файла преподавателю (program --> telegram)"
 

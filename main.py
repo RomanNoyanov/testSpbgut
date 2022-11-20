@@ -16,7 +16,7 @@ BotDB = BotDB(db_file)  # адрес к бд
 
 @bot.message_handler(commands=['start'])  # (обработчик сообщения) прописываем что отслеживает бот (/start)
 def start(message):
-    "функция старта, отслеживает сообщение '/start', предлагает регистрацию новому пользователю"
+    """функция старта, отслеживает сообщение '/start', предлагает регистрацию новому пользователю"""
     log(message)
     if (not BotDB.user_exists(message.from_user.id)) and (not BotDB.teacher_exists(message.from_user.id)):
         # если в методе проверки наличия пользователя нет пользователя, то:
@@ -50,13 +50,13 @@ def start(message):
 
 @bot.message_handler(content_types=['sticker'])  # прописываем что отслеживает бот(если пользователь отправил стикер)
 def send_message_sticker(message):
-    "функция, отправляющая сообщение, когда пришел стикер"
+    """функция, отправляющая сообщение, когда пришел стикер"""
     bot.send_message(message.chat.id, 'Стикер то классный, но разве он входит в изучение предмета?')
 
 
 @bot.message_handler(commands=['help'])  # (обработчик сообщения) прописываем что отслеживает бот(/help)
 def sey_to_help(message):
-    "функция, отправляющая подсказки пользователю"
+    """функция, отправляющая подсказки пользователю"""
     if BotDB.teacher_exists(message.from_user.id):
         message_help = "Основные команды:\n" + \
                        "/test - введите для начала прохождения теста\n" + \

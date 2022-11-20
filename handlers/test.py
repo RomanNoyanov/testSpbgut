@@ -78,7 +78,7 @@ def drop_test(message):
         print_test(message.chat.id, name_table, dict_id_question.get(message.chat.id))
         # вызываем функцию формирования вопросов на экране
 
-    except:  # теста нет в базе
+    except Exception as e:  # теста нет в базе
         dict_drop_test_calls[message.chat.id] += 1
         if dict_drop_test_calls[message.chat.id] < 4:  # ограничение на количество вводов названия теста
             msg = bot.send_message(message.chat.id,

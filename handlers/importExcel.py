@@ -27,7 +27,7 @@ def read_excel(message):
             name_file_s = str(name_file).split(".")
 
             if name_file_s[1] == "xlsx" or name_file_s[1] == "xls":  # проверка на тип файла
-                if (not BotDB.check_test_in_db(name_file_s[0])):  # Проверяем есть ли тест с таким названием
+                if not BotDB.check_test_in_db(name_file_s[0]):  # Проверяем есть ли тест с таким названием
                     downloaded_file = bot.download_file(file_info.file_path)  # Скачиваем полученный файл
                     src = 'files/' + message.document.file_name  # Ссылка на файл
                     with open(src, 'wb') as new_file:
@@ -50,8 +50,6 @@ def read_excel(message):
         except:
             deleting_unnecessary_tables(name_file_s[0], src, message)
             bot.reply_to(message, "Неверно оформлен файл")
-
-
 
     else:
         pass

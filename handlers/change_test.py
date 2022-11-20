@@ -9,7 +9,7 @@ BotDB = BotDB(db_file)
 
 @bot.message_handler(commands=['change'])
 def change(message):
-    "Функция обработки изменения теста и отправки подсказки преподавателю"
+    """Функция обработки изменения теста и отправки подсказки преподавателю"""
     if BotDB.teacher_exists(message.from_user.id):
         msg = bot.send_message(message.chat.id,
                                "Отправьте изменённый exel-файл с этим тестом, название должно быть прежнее")
@@ -22,7 +22,7 @@ def change(message):
 
 
 def ch(message):
-    "Функция изменения теста"
+    """Функция изменения теста"""
     try:
         name_file = message.document.file_name  # Название файла в формат nnn.xxx
         name_file_s = str(name_file).split(".")
