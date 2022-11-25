@@ -15,7 +15,7 @@ class BotDB:
             logFile.log_err(err=error_string)
 
     def user_exists(self, telegram_id):
-        """Проверяем, есть ли юзер в базе"""
+        """Функция проверки наличия юзера в базе"""
         try:
             result = self.cursor.execute("SELECT `telegram_id` FROM `users` WHERE `telegram_id` = ?", (telegram_id,))
             return bool(len(result.fetchall()))
@@ -24,7 +24,7 @@ class BotDB:
             logFile.log_err(err=error_string)
 
     def add_user(self, telegram_id, name_user, surname_user, group_user):
-        """Добавляем юзера в базу"""
+        """Функция добавления юзера в базу"""
         try:
             self.cursor.execute(
                 """INSERT INTO `users` ('telegram_id','name_user','surname_user','group_user') 
@@ -36,8 +36,8 @@ class BotDB:
             logFile.log_err(err=error_string)
 
     def teacher_exists(self, telegram_id):
+        """Функция проверки наличия преподавателя в базе"""
         try:
-            """Проверяем, есть ли преподаватель в базе"""
             result = self.cursor.execute("SELECT `telegram_id` FROM `teacher` WHERE `telegram_id` = ?", (telegram_id,))
             return bool(len(result.fetchall()))
         except sqlite3.Error as e:
@@ -45,8 +45,8 @@ class BotDB:
             logFile.log_err(err=error_string)
 
     def add_teacher(self, telegram_id, surname_teacher, name_teacher, patronymic_teacher):
+        """Функция внесения преподавателя в базу"""
         try:
-            """Добавляем преподавателя в базу"""
             self.cursor.execute(
                 """INSERT INTO `teacher` ('telegram_id','surname_teacher','name_teacher','patronymic_teacher') 
                VALUES (?,?,?,?)""",
@@ -57,8 +57,8 @@ class BotDB:
             logFile.log_err(err=error_string)
 
     def get_teacher(self, telegram_id):
+        """Функция возвращает информацию о преподавателе"""
         try:
-            """Достаем информацию о преподавателе"""
             result = self.cursor.execute("SELECT * FROM `teacher` WHERE `telegram_id` = ?", (telegram_id,))
             return result.fetchall()
         except sqlite3.Error as e:
@@ -66,8 +66,8 @@ class BotDB:
             logFile.log_err(err=error_string)
 
     def get_user(self, telegram_id):
+        """Функция возвращает информацию о пользователе"""
         try:
-            """Достаем информацию о пользователе"""
             result = self.cursor.execute("SELECT * FROM `users` WHERE `telegram_id` = ?", (telegram_id,))
             return result.fetchall()
         except sqlite3.Error as e:
@@ -75,8 +75,8 @@ class BotDB:
             logFile.log_err(err=error_string)
 
     def drop_test(self, name_table, id_question):
+        """Функция возвращает вопрос и таблицы name_table и записываем в БД информацию о прохождении ученика"""
         try:
-            """Достаем вопрос и таблицы name_table и записываем в БД информацию о прохождении ученика"""
             result = self.cursor.execute(
                 f"""SELECT `questions`,`answerA`,`answerB`,`answerC`,`answerD`,`true_answer`
                  FROM {name_table} 
@@ -87,8 +87,8 @@ class BotDB:
             logFile.log_err(err=error_string)
 
     def max_question_number(self, name_table):
+        """Функция возвращает максимальное число вопросов"""
         try:
-            """Достаем максимальное число вопросов"""
             result = self.cursor.execute(f"SELECT MAX(id_question) FROM {name_table}")
             return result.fetchone()
         except sqlite3.Error as e:
@@ -96,8 +96,8 @@ class BotDB:
             logFile.log_err(err=error_string)
 
     def user_answer(self, answer, id_question, name_table):
+        """Достаем ответ пользователя в виде строки"""
         try:
-            """Достаем ответ пользователя в виде строки"""
             result = self.cursor.execute(f"SELECT {answer} FROM {name_table} WHERE `id_question`=?", (id_question,))
             return result.fetchone()
         except sqlite3.Error as e:
@@ -105,8 +105,8 @@ class BotDB:
             logFile.log_err(err=error_string)
 
     def check_test_in_db(self, name_table):
+        """Проверка на наличие таблицы в бд"""
         try:
-            """Проверка на наличие таблицы в бд"""
             result = self.cursor.execute(f"SELECT name FROM sqlite_sequence WHERE name='{name_table}' ")
             return bool(len(result.fetchall()))
         except sqlite3.Error as e:
@@ -153,8 +153,8 @@ class BotDB:
         return self.conn.commit()
 
     def insert_score_test(self, name_file, telegram_id, balls, ):
+        """Заполнение таблицы с оценками учеников"""
         try:
-            """Заполнение таблицы с оценками учеников"""
             score_name_table = name_file + "_score"
             self.cursor.execute(
                 f"INSERT INTO '{score_name_table}' (`telegram_id`,`score`) VALUES (?,?)", (telegram_id, balls))
@@ -181,8 +181,8 @@ class BotDB:
         return self.conn.commit()
 
     def drop_score_for_user(self, name_table, telegram_id):
+        """Функция вывода личной оценки ученика"""
         try:
-            """Вывод личной оценки ученика"""
             score_name_table = name_table + "_score"
             self.cursor.execute(f"""  SELECT score
                                       FROM {score_name_table} 
@@ -193,8 +193,8 @@ class BotDB:
             logFile.log_err(err=error_string)
 
     def drop_score_for_teacher(self, name_table):
+        """Функция вывода всех оценок за тест"""
         try:
-            """Вывод всех оценок за тест"""
             score_name_table = name_table + "_score"
             self.cursor.execute(f"""SELECT users.surname_user, users.name_user,  
                                     users.group_user, {score_name_table}.score
@@ -216,8 +216,8 @@ class BotDB:
             logFile.log_err(err=error_string)
 
     def update_user_name(self, new_name):
+        """Функция изменения имени студента"""
         try:
-            """Функция изменения имени студента"""
             telegram_id = new_name.from_user.id
             new_name = new_name.text.title()
             self.cursor.execute("UPDATE `users` SET `name_user` = ? WHERE `telegram_id` = ?", (new_name, telegram_id,))
@@ -227,8 +227,8 @@ class BotDB:
             logFile.log_err(err=error_string)
 
     def update_user_surname(self, new_surname):
+        """Функция изменения фамилии студента"""
         try:
-            """Функция изменения фамилии студента"""
             telegram_id = new_surname.from_user.id
             new_surname = new_surname.text.title()
             self.cursor.execute("""UPDATE `users` 
@@ -240,8 +240,8 @@ class BotDB:
             logFile.log_err(err=error_string)
 
     def update_user_group(self, new_group):
+        """Функция изменения группы студента"""
         try:
-            """Функция изменения группы студента"""
             telegram_id = new_group.from_user.id
             new_group = new_group.text
             self.cursor.execute("""UPDATE `users` 
@@ -253,8 +253,8 @@ class BotDB:
             logFile.log_err(err=error_string)
 
     def update_teacher_name(self, name):
+        """Функция изменения имени преподавателя"""
         try:
-            """Функция изменения имени преподавателя"""
             telegram_id = name.from_user.id
             name = name.text.title()
             self.cursor.execute("""UPDATE `teacher` 
@@ -266,8 +266,8 @@ class BotDB:
             logFile.log_err(err=error_string)
 
     def update_teacher_surname(self, surname):
+        """Функция изменения фамилии преподавателя"""
         try:
-            """Функция изменения фамилии преподавателя"""
             telegram_id = surname.from_user.id
             surname = surname.text.title()
             self.cursor.execute("""UPDATE `teacher` 
@@ -279,8 +279,8 @@ class BotDB:
             logFile.log_err(err=error_string)
 
     def update_teacher_patronymic(self, patronymic):
+        """Функция изменения отчества преподавателя"""
         try:
-            """Функция изменения отчества преподавателя"""
             telegram_id = patronymic.from_user.id
             patronymic = patronymic.text.title()
             self.cursor.execute("""UPDATE `teacher`
