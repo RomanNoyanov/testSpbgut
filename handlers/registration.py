@@ -263,7 +263,7 @@ def get_password(message):
         else:  # количество попыток исчерпано, выход на старт регистрации
             bot.send_message(message.chat.id,
                              "Неверный код \n Начните регистрацию заново, введите /start")
-            dict_get_password_calls[message.chat.id] = 0  # обнуляем кол-во вводов паролей
+            del dict_get_password_calls[message.chat.id]
 
 
 def data_teacher(message):
@@ -424,7 +424,7 @@ def add_teacher_patronymic(message):
                                                                  "данные изменить невозможно",
                                                                  reply_markup=weather_key(d))
 
-    if not BotDB.teacher_exists(message.from_user.id):  # если преподаватель есть в БД
+    if not BotDB.teacher_exists(message.from_user.id):  # если преподавателя нет в БД
         try:
             teacher_surname = str(dict_surname_teacher_for_teacher.get(message.from_user.id))
             # получаем фамилию преподавателя из словаря
@@ -466,6 +466,12 @@ def completion_registration(call):
                               message_id=message_to_edit.message_id, text=mes)  # изменяем сообщение на данные юзера
         bot.send_message(call.message.chat.id, "Для ознакомления с основными функциями бота введите\n/help")
         # отправка вспомогательного сообщения пользователю
+
+        del dict_surname_user_for_users[call.message.chat.id]
+        del dict_name_user_for_users[call.message.chat.id]
+        del dict_group_user_for_users[call.message.chat.id]
+        del reg_dict_message_to_edit[call.message.chat.id]
+        # очистка словарей после окончания регистрации
 
     elif call.data == "изменить":
         message_to_edit = reg_dict_message_to_edit.get(call.message.chat.id)
@@ -516,6 +522,17 @@ def completion_registration(call):
         bot.send_message(call.message.chat.id,
                          "Для ознакомления с основными функциями бота введите\n/help")
         # отправка вспомогательного сообщения пользователю
+        if BotDB.user_exists(call.message.chat.id):
+            del dict_surname_user_for_users[call.message.chat.id]
+            del dict_name_user_for_users[call.message.chat.id]
+            del dict_group_user_for_users[call.message.chat.id]
+            # очистка словарей для пользователя после окончания изменений
+        elif BotDB.teacher_exists(call.message.chat.id):
+            del dict_surname_teacher_for_teacher[call.message.chat.id]
+            del dict_name_teacher_for_teacher[call.message.chat.id]
+            del dict_teacher_patronymic_for_teacher[call.message.chat.id]
+        del reg_dict_message_to_edit[call.message.chat.id]
+        # очистка словарей для преподавателя после окончания изменений
 
     elif call.data == "п_завершить":  # преподаватель выбрал завершить изменения
         message_to_edit = reg_dict_message_to_edit.get(call.message.chat.id)
@@ -535,6 +552,12 @@ def completion_registration(call):
 
         bot.send_message(call.message.chat.id, "Для ознакомления с основными функциями бота введите\n/help")
         # отправка вспомогательного сообщения пользователю
+
+        del dict_surname_teacher_for_teacher[call.message.chat.id]
+        del dict_name_teacher_for_teacher[call.message.chat.id]
+        del dict_teacher_patronymic_for_teacher[call.message.chat.id]
+        del reg_dict_message_to_edit[call.message.chat.id]
+        # очистка словарей после окончания изменений
 
     elif call.data == "п_изменить":  # преподаватель выбрал внести изменения
         message_to_edit = reg_dict_message_to_edit.get(call.message.chat.id)
