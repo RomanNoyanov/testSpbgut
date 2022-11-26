@@ -75,7 +75,7 @@ class BotDB:
             logFile.log_err(err=error_string)
 
     def drop_test(self, name_table, id_question):
-        """Функция возвращает вопрос и таблицы name_table и записываем в БД информацию о прохождении ученика"""
+        """Функция возвращает вопрос и таблицы name_table и записывает в БД информацию о прохождении ученика"""
         try:
             result = self.cursor.execute(
                 f"""SELECT `questions`,`answerA`,`answerB`,`answerC`,`answerD`,`true_answer`
