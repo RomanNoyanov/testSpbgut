@@ -28,8 +28,15 @@ def drop_score(message):
         logFile.log_err(message, error_string)
 
 
+@bot.message_handler(commands=['my_score'])
+def score_for_user(message):
+    """Функция для отправки подсказки пользователю для получения персональных баллов за тест"""
+    bot.send_message(message.chat.id, "Введите название теста, баллы за который хотите посмотреть")
+    bot.register_next_step_handler(message, print_score_for_user)
+
+
 def print_score_for_user(message):
-    """Функция для вывода персональной оценки за тест"""
+    """Функция для вывода персональных баллов за тест"""
     name_table = message.text
     name_table_score = name_table + "_score"
     try:
@@ -45,7 +52,7 @@ def print_score_for_user(message):
 
 
 def print_score_for_teacher(message):
-    """Функция для вывода всех оценок учеников за тест"""
+    """Функция для вывода всех баллов учеников за тест"""
     max_balls = BotDB.max_question_number(message.text)
     try:
         score = "Название теста: " + message.text + "\n" + "Максимальное количество баллов за тест: " + str(
