@@ -13,7 +13,7 @@ BotDB = BotDB(db_file)
 test_dict_message_to_edit = {}  # словарь, где хранятся пары id пользователя - изменяемое сообщение
 dict_id_question = {}  # словарь, где хранятся пары id пользователя - id вопроса
 dict_balls = {}  # словарь, где хранятся пары id пользователя - набранные баллы
-dict_text = {}  # словарь, где хранятся пары id пользователя -
+dict_text = {}  # словарь, где хранятся пары id пользователя - текст сообщения
 dict_drop_test_calls = {}  # содержит количество вводов пользователем названия теста
 
 
@@ -98,7 +98,7 @@ def drop_test(message):
         else:  # кол-во вводов превысило максимально разрешённое
             bot.send_message(message.chat.id, "Для ознакомления с основными функциями бота введите\n/help")
             # отправка пользователю вспомогательного сообщения
-            dict_drop_test_calls[message.chat.id] = 0  # обнуляем кол-во попыток
+            del dict_drop_test_calls[message.chat.id]
 
 
 def callback_inline(call):
@@ -182,8 +182,10 @@ def callback_inline(call):
             # внесение результата ученика в БД
             bot.send_message(call.message.chat.id, dict_text.get(call.message.chat.id),
                              reply_markup=markup)  # отправка сообщения с результатом пользователю
-            dict_id_question[call.message.chat.id] = dict_id_question.get(call.message.chat.id) + 1
-            # увеличение счётчика вопросов на 1
+            del dict_id_question[call.message.chat.id]
+            del dict_balls[call.message.chat.id]
+            del test_dict_message_to_edit[call.message.chat.id]
+            del dict_text[call.message.chat.id]
         except Exception as e:
             bot.send_message(call.message.chat.id, "Что-то пошло не так :(")
             # отправка пользователю сообщения об ошибке
